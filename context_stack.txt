@@ -1,0 +1,89 @@
+================================================================================
+CONTEXT & TEKNOLOGI STACK: DASHBOARD ANALISA ANGGARAN INTERAKTIF
+================================================================================
+
+Dokumen ini menjelaskan rancangan arsitektur, pilihan pustaka (libraries), 
+serta keputusan desain yang digunakan untuk membangun Dashboard Analisa 
+Anggaran yang modern, bersih, elegan, dan berkinerja tinggi.
+
+--------------------------------------------------------------------------------
+1. ARSITEKTUR UTAMA: CLIENT-SIDE SINGLE PAGE APPLICATION (SPA)
+--------------------------------------------------------------------------------
+* Penyimpanan Data Lokal (budget_data.js): 
+  Seluruh basis data (833 baris data anggaran) diekspor dari Excel menjadi berkas 
+  JavaScript objek (`BUDGET_DATA`). Pendekatan ini dipilih karena:
+  - Tanpa Setup Server: Dashboard dapat berjalan instan hanya dengan mengklik 
+    dua kali berkas `index.html` (protokol `file://`).
+  - Bebas Masalah CORS: Browser tidak akan memblokir pengambilan data karena 
+    tidak menggunakan AJAX/fetch eksternal.
+  - Performa Instan: Pencarian, penyaringan, dan penggambaran ulang grafik 
+    berlangsung < 10ms karena seluruh data berada di dalam memori (RAM) peramban.
+
+--------------------------------------------------------------------------------
+2. SISTEM TATA LETAK & GAYA VISUAL (BOOTSTRAP 5 & CUSTOM CSS)
+--------------------------------------------------------------------------------
+* Kerangka CSS (Bootstrap 5.3.2): 
+  Digunakan untuk sistem kisi responsif (Grid System), utilitas spasi (padding/margin), 
+  dan elemen dasar seperti dropdown form dan navigasi tab.
+* Tipografi Premium (Google Font - Poppins): 
+  Menggunakan font sans-serif geometris yang clean dan profesional. Ukuran teks 
+  diatur ringkas (rata-rata 0.8rem - 0.9rem) untuk menjaga kerapian visual.
+* Desain Cards Modern: 
+  Menghilangkan border bawaan (`border-0`), menggunakan sudut membulat lebar 
+  (`border-radius: 12px`), dan bayangan lembut (`box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05)`).
+* Aksen Visual Unit Kerja: 
+  Setiap kartu metrik diberikan aksen garis warna vertikal tipis (border-left 4px) 
+  di sisi kiri untuk pengelompokan kategori yang intuitif.
+* Lekatan Vektor (Sticky Viewport):
+  Header menempel di atas (`sticky-top`) dan Footer menempel di bawah (`sticky-bottom` /
+  flex body) dengan arah bayangan yang berlawanan. Memberikan efek aplikasi web 
+  native yang solid saat halaman digulirkan.
+
+--------------------------------------------------------------------------------
+3. MESIN VISUALISASI INTERAKTIF (CHART.JS)
+--------------------------------------------------------------------------------
+* Pengemasan Ulang Komposisi (Top 8 + Lainnya): 
+  Pada grafik UPT dan Subkegiatan, data yang disaring seringkali memiliki 
+  puluhan kategori. Jika ditampilkan semua, grafik pai/donat akan menjadi sangat 
+  kecil akibat legenda yang terlalu panjang. Kode JavaScript dirancang untuk 
+  mengambil 8 subkegiatan/UPT terbesar, lalu menggabungkan sisanya secara otomatis 
+  menjadi satu irisan tunggal bernama "Lainnya/Subkegiatan Lainnya".
+* Grafik Tren Ganda Berdampingan (Grouped Bar Chart): 
+  Menyajikan APBD Murni (Biru) dan P-APBD (Ungu) berdampingan per tahun. Grafik 
+  ini diatur khusus agar mengabaikan filter tahun, sehingga komparasi tren 
+  3 tahun (2024, 2025, 2026) selalu terlihat utuh meskipun filter tabel berubah.
+* Pembacaan Nilai Mata Uang Ringkas: 
+  Sumbu Y grafik menggunakan pengubah format Rupiah pendek (misal: 1.45 T, 350 M, 
+  12 Jt) agar label grafik tetap bersih, sementara tooltip hover tetap menampilkan 
+  nilai penuh Rupiah (Rp 1.450.000.000.000) untuk keakuratan data.
+
+--------------------------------------------------------------------------------
+4. MANAJEMEN DATA GRID & MOTOR PENCARI KUSTOM
+--------------------------------------------------------------------------------
+* Pencarian Teks dengan Penangguhan (Debounced Search): 
+  Pencarian teks menggunakan penangguhan waktu (*debounce*) selama 300ms. Ini 
+  mencegah peramban melakukan penyaringan ulang di setiap ketukan keyboard, 
+  sehingga ketikan pengguna terasa sangat mulus tanpa lag.
+* Pengurutan Dinamis Kolom (In-Memory Sort): 
+  Header tabel data dapat diklik untuk mengurutkan kolom secara naik (ASC) atau 
+  turun (DESC). Pengurutan menangani teks secara tidak sensitif huruf besar/kecil 
+  (case-insensitive) dan angka secara matematis.
+* Pembatasan Sel Lebar (Hover Text Expansion):
+  Untuk mencegah kolom tabel menjadi terlalu lebar akibat nama subkegiatan yang 
+  sangat panjang, kolom diatur memiliki batas lebar maksimal dengan titik-titik 
+  elipsis (`...`). Ketika pengguna mengarahkan kursor di atas teks tersebut, sel 
+  akan mengembang menampilkan teks lengkap secara temporer (`.text-truncate-hover`).
+
+--------------------------------------------------------------------------------
+5. MESIN KALKULASI PERTUMBUHAN (YoY & VARIANS BELANJA)
+--------------------------------------------------------------------------------
+* Komparasi YoY yang Terbimbing (getBudgetForYear): 
+  Ketika filter diterapkan (misal menyaring UPT Malang), kalkulasi kenaikan/penurunan 
+  persentase APBD murni dibandingkan tahun sebelumnya dihitung secara presisi. 
+  Sistem akan menyaring data tahun lalu menggunakan parameter filter bidang 
+  dan pencarian yang *sama* untuk mendapatkan perbandingan YoY yang logis.
+* Rasio Variansi Belanja P-APBD vs APBD:
+  Untuk kartu P-APBD, angka persentase pembanding dihitung langsung terhadap 
+  nilai APBD Murni di tahun anggaran yang sama untuk memperlihatkan seberapa 
+  besar pergeseran alokasi belanja yang disetujui dalam sidang anggaran perubahan.
+================================================================================

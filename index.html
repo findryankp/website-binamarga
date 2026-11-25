@@ -1,0 +1,1774 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dashboard Analisa Anggaran interaktif untuk memvisualisasikan alokasi anggaran, tren pertumbuhan tahunan, konsentrasi unit kerja, dan kegiatan non-aktif secara real-time.">
+    <title>Dashboard Analisa Anggaran - Executive Portal</title>
+    
+    <!-- Google Fonts - Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    
+    <!-- Leaflet CSS for Interactive GIS Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    
+    <!-- Custom Style CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Main App Layout Wrapper -->
+    <div class="app-layout">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="app-sidebar" id="appSidebar">
+            <div>
+                <!-- Sidebar Logo Header Matching Reference -->
+                <div class="sidebar-logo mb-3">
+                    <div class="d-flex align-items-center mb-3">
+                        <!-- Lambang Resmi Jawa Timur -->
+                        <div class="me-2.5 flex-shrink-0" style="width: 36px; height: 44px;">
+                            <svg viewBox="0 0 100 120" width="36" height="44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Perisai Hijau -->
+                                <path d="M50 5 L88 22 C88 65 72 98 50 115 C28 98 12 65 12 22 Z" fill="#047857" stroke="#eab308" stroke-width="4"/>
+                                <!-- Bingkai Emas Dalam -->
+                                <path d="M50 11 L82 25 C82 62 68 92 50 107 C32 92 18 62 18 25 Z" fill="#059669"/>
+                                <!-- Pita & Gelombang Air Biru Bawah -->
+                                <path d="M26 86 C34 94 42 88 50 94 C58 88 66 94 74 86 C70 98 58 105 50 105 C42 105 30 98 26 86 Z" fill="#0284c7"/>
+                                <!-- Tugu Pahlawan Perak -->
+                                <polygon points="50,22 55,75 58,82 42,82 45,75" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+                                <!-- Bintang Kuning Emas di Puncak -->
+                                <polygon points="50,15 52.5,21 58.5,21 53.5,25 55.5,31 50,27 44.5,31 46.5,25 41.5,21 47.5,21" fill="#facc15" stroke="#ca8a04" stroke-width="0.8"/>
+                                <!-- Padi dan Kapas -->
+                                <path d="M30 40 Q25 60 38 78" stroke="#facc15" stroke-width="3" stroke-linecap="round" fill="none"/>
+                                <path d="M70 40 Q75 60 62 78" stroke="#facc15" stroke-width="3" stroke-linecap="round" fill="none"/>
+                                <!-- Pita Kuning -->
+                                <rect x="25" y="80" width="50" height="7" rx="3" fill="#fef08a" stroke="#ca8a04" stroke-width="1"/>
+                            </svg>
+                        </div>
+                        <div class="lh-sm">
+                            <div class="fw-bold text-dark" style="font-size: 0.775rem; letter-spacing: -0.01em;">Dinas Pekerjaan Umum</div>
+                            <div class="fw-bold text-dark" style="font-size: 0.775rem; letter-spacing: -0.01em;">Bina Marga</div>
+                            <div class="text-secondary" style="font-size: 0.675rem;">Provinsi Jawa Timur</div>
+                        </div>
+                    </div>
+
+                    <!-- Mini Card Badge Dashboard Anggaran -->
+                    <div class="d-flex align-items-center gap-2 px-3 py-2 rounded-3 mb-3" style="background-color: #eff6ff; color: #2563eb; border: 1px solid #dbeafe;">
+                        <i class="bi bi-bar-chart-fill fs-6"></i>
+                        <span class="fw-bold text-xs">Dashboard Anggaran</span>
+                    </div>
+                </div>
+
+                <!-- Navigation Links List -->
+                <ul class="nav nav-pills flex-column sidebar-nav-list" id="dashboard-tab" role="tablist">
+                    <li class="nav-item mb-2" role="presentation">
+                        <button class="nav-link active sidebar-menu-btn" id="charts-tab" data-bs-toggle="pill" data-bs-target="#tab-charts" type="button" role="tab" aria-controls="tab-charts" aria-selected="true">
+                            <i class="bi bi-house me-3 fs-5"></i> Ringkasan
+                        </button>
+                    </li>
+                    <li class="nav-item mb-2" role="presentation">
+                        <button class="nav-link sidebar-menu-btn d-flex align-items-center justify-content-between collapsed" id="anggaran-main-btn" data-bs-toggle="collapse" data-bs-target="#submenu-anggaran" aria-expanded="false" type="button">
+                            <span class="d-flex align-items-center">
+                                <i class="bi bi-clipboard-data me-3 fs-5"></i> Anggaran
+                            </span>
+                            <i class="bi bi-chevron-down submenu-arrow" style="font-size: 0.75rem;"></i>
+                        </button>
+                        <div class="collapse submenu-container mt-1 ms-3 ps-2 border-start" id="submenu-anggaran">
+                            <ul class="list-unstyled flex-column gap-1 pt-1 d-flex mb-0">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link sidebar-submenu-btn" id="anggaran-pagu-tab" data-bs-toggle="pill" data-bs-target="#tab-anggaran-pagu" type="button" role="tab" aria-controls="tab-anggaran-pagu" aria-selected="false">
+                                        <i class="bi bi-wallet2 me-2"></i> Pagu
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link sidebar-submenu-btn" id="anggaran-realisasi-tab" data-bs-toggle="pill" data-bs-target="#tab-anggaran-realisasi" type="button" role="tab" aria-controls="tab-anggaran-realisasi" aria-selected="false">
+                                        <i class="bi bi-graph-up-arrow me-2"></i> Realisasi
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item mb-2" role="presentation">
+                        <button class="nav-link sidebar-menu-btn" id="mapping-tab" data-bs-toggle="pill" data-bs-target="#tab-mapping" type="button" role="tab" aria-controls="tab-mapping" aria-selected="false">
+                            <i class="bi bi-grid me-3 fs-5"></i> Program
+                        </button>
+                    </li>
+                    <li class="nav-item mb-2" role="presentation">
+                        <button class="nav-link sidebar-menu-btn d-flex align-items-center justify-content-between collapsed" id="kinerja-main-btn" data-bs-toggle="collapse" data-bs-target="#submenu-kinerja" aria-expanded="false" type="button">
+                            <span class="d-flex align-items-center">
+                                <i class="bi bi-speedometer2 me-3 fs-5"></i> Kinerja
+                            </span>
+                            <i class="bi bi-chevron-down submenu-arrow" style="font-size: 0.75rem;"></i>
+                        </button>
+                        <div class="collapse submenu-container mt-1 ms-3 ps-2 border-start" id="submenu-kinerja">
+                            <ul class="list-unstyled flex-column gap-1 pt-1 d-flex mb-0">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link sidebar-submenu-btn" id="kinerja-tujuan-tab" data-bs-toggle="pill" data-bs-target="#tab-target-kinerja" type="button" role="tab" aria-controls="tab-target-kinerja" aria-selected="false">
+                                        <i class="bi bi-bullseye me-2"></i> Tujuan
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link sidebar-submenu-btn" id="kinerja-sasaran-tab" data-bs-toggle="pill" data-bs-target="#tab-target-kinerja" type="button" role="tab" aria-controls="tab-target-kinerja" aria-selected="false">
+                                        <i class="bi bi-flag-fill me-2"></i> Sasaran
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link sidebar-submenu-btn" id="kinerja-program-tab" data-bs-toggle="pill" data-bs-target="#tab-target-kinerja" type="button" role="tab" aria-controls="tab-target-kinerja" aria-selected="false">
+                                        <i class="bi bi-gear-fill me-2"></i> Program
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link sidebar-submenu-btn" id="kinerja-kegiatan-tab" data-bs-toggle="pill" data-bs-target="#tab-target-kinerja" type="button" role="tab" aria-controls="tab-target-kinerja" aria-selected="false">
+                                        <i class="bi bi-journal-bookmark-fill me-2"></i> Kegiatan
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link sidebar-submenu-btn" id="kinerja-subkegiatan-tab" data-bs-toggle="pill" data-bs-target="#tab-target-kinerja" type="button" role="tab" aria-controls="tab-target-kinerja" aria-selected="false">
+                                        <i class="bi bi-boxes me-2"></i> Subkegiatan
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item mb-2" role="presentation">
+                        <button class="nav-link sidebar-menu-btn d-flex align-items-center justify-content-between collapsed" id="jj-main-btn" data-bs-toggle="collapse" data-bs-target="#submenu-jj" aria-expanded="false" type="button">
+                            <span class="d-flex align-items-center">
+                                <i class="bi bi-cone-striped me-3 fs-5"></i> Jalan dan Jembatan
+                            </span>
+                            <i class="bi bi-chevron-down submenu-arrow" style="font-size: 0.75rem;"></i>
+                        </button>
+                        <div class="collapse submenu-container mt-1 ms-3 ps-2 border-start" id="submenu-jj">
+                            <ul class="list-unstyled flex-column gap-1 pt-1 d-flex mb-0">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link sidebar-submenu-btn" id="jj-data-tab" data-bs-toggle="pill" data-bs-target="#tab-jj-data" type="button" role="tab" aria-controls="tab-jj-data" aria-selected="false">
+                                        <i class="bi bi-bar-chart-line me-2"></i> Data
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link sidebar-submenu-btn" id="jj-paket-tab" data-bs-toggle="pill" data-bs-target="#tab-jj-paket" type="button" role="tab" aria-controls="tab-jj-paket" aria-selected="false">
+                                        <i class="bi bi-table me-2"></i> Paket
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link sidebar-submenu-btn" id="jj-peta-tab" data-bs-toggle="pill" data-bs-target="#tab-jj-peta" type="button" role="tab" aria-controls="tab-jj-peta" aria-selected="false">
+                                        <i class="bi bi-geo-alt me-2"></i> Peta
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item mb-2" role="presentation">
+                        <button class="nav-link sidebar-menu-btn" id="settings-tab" type="button" onclick="document.getElementById('btn-reset')?.click();">
+                            <i class="bi bi-arrow-counterclockwise me-3 fs-5"></i> Reset Filter
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Siluet Landmark Airbrush Background -->
+            <div class="sidebar-skyline-bg"></div>
+
+            <!-- Sidebar User Profile Footer -->
+            <div class="sidebar-user-card d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-2.5">
+                    <div class="user-avatar bg-primary text-white fw-bold d-flex align-items-center justify-content-center">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    <div>
+                        <div class="user-name">Anissa D.</div>
+                        <div class="user-role">Admin</div>
+                    </div>
+                </div>
+                <i class="bi bi-chevron-down text-muted fs-7"></i>
+            </div>
+        </aside>
+
+        <!-- Sidebar Mobile Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Main Content Area -->
+        <main class="app-main">
+            <div class="container-fluid px-0">
+                
+                <!-- Main Header Bar -->
+                <header class="main-header d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4" id="main-global-header">
+                    <div class="d-flex align-items-center">
+                        <button class="btn btn-white border shadow-xs d-lg-none me-2" type="button" id="sidebar-toggle-btn">
+                            <i class="bi bi-list fs-5"></i>
+                        </button>
+                    </div>
+
+                    <!-- Floating Filter Controls in Headbar -->
+                    <div class="headbar-floating-filter-group d-flex align-items-center flex-wrap gap-2 ms-auto">
+                        <!-- Pill 1: Tahun Anggaran -->
+                        <div class="floating-filter-pill d-flex align-items-center shadow-xs">
+                            <span class="floating-filter-icon text-primary"><i class="bi bi-calendar3"></i></span>
+                            <select class="floating-filter-select" id="filter-tahun" title="Pilih Tahun Anggaran">
+                                <option value="all">Semua Tahun</option>
+                            </select>
+                        </div>
+
+                        <!-- Pill 2: Jenis Anggaran -->
+                        <div class="floating-filter-pill d-flex align-items-center shadow-xs">
+                            <span class="floating-filter-icon text-warning"><i class="bi bi-layers"></i></span>
+                            <select class="floating-filter-select" id="filter-jenis" title="Pilih Jenis Anggaran">
+                                <option value="all">Semua Jenis</option>
+                            </select>
+                        </div>
+
+                        <!-- Pill 3: Bidang / UPT -->
+                        <div class="floating-filter-pill d-flex align-items-center shadow-xs">
+                            <span class="floating-filter-icon text-success"><i class="bi bi-building"></i></span>
+                            <select class="floating-filter-select" id="filter-bidang" style="max-width: 170px;" title="Pilih Bidang / UPT">
+                                <option value="all">Semua Bidang</option>
+                            </select>
+                        </div>
+
+                        <!-- Pill 4: Program Kerja -->
+                        <div class="floating-filter-pill d-flex align-items-center shadow-xs">
+                            <span class="floating-filter-icon" style="color: #8b5cf6;"><i class="bi bi-journal-bookmark"></i></span>
+                            <select class="floating-filter-select" id="filter-program" style="max-width: 170px;" title="Pilih Program Kerja">
+                                <option value="all">Semua Program</option>
+                            </select>
+                        </div>
+
+                        <!-- Pill 5: Reset Filter (Floating Circle) -->
+                        <button class="floating-filter-btn-reset shadow-xs position-relative" id="btn-reset" type="button" title="Atur Ulang / Reset Filter">
+                            <i class="bi bi-arrow-counterclockwise fs-7"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle d-none" id="active-filter-badge"></span>
+                        </button>
+
+                        <!-- Pill 7: Ekspor Data -->
+                        <button class="floating-filter-btn-export shadow-xs" id="btn-export" type="button" title="Ekspor Data CSV">
+                            <i class="bi bi-file-earmark-arrow-down fs-7"></i>
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Dashboard Statistics & Analytics Grid -->
+                <section>
+                    
+                    <!-- Top 5 Summary KPI Cards Grid (Modern, Colorful, Compact & Animated) -->
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-2.5 mb-3" id="global-summary-kpis">
+                        <!-- Card 1: Total Anggaran -->
+                        <div class="col">
+                            <div class="summary-kpi-card summary-kpi-card-amber h-100">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="flex-grow-1 pe-2" style="min-width: 0;">
+                                        <div class="kpi-title-text text-warning-emphasis">Total Anggaran</div>
+                                        <div class="kpi-amount-text fw-bold text-dark" id="kpi-summary-budget">Rp 0</div>
+                                    </div>
+                                    <div class="kpi-icon-box kpi-icon-amber shadow-xs">
+                                        <i class="bi bi-wallet2"></i>
+                                    </div>
+                                </div>
+
+                                <div class="kpi-sub-text text-truncate mb-2" id="kpi-summary-budget-sub">vs tahun 2025</div>
+                                <div class="progress kpi-progress-bar" style="height: 3.5px; background-color: rgba(245,158,11,0.12);">
+                                    <div class="progress-bar progress-bar-gradient-amber" role="progressbar" style="width: 100%;" id="kpi-summary-budget-progress"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Realisasi -->
+                        <div class="col">
+                            <div class="summary-kpi-card summary-kpi-card-green h-100">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="flex-grow-1 pe-2" style="min-width: 0;">
+                                        <div class="kpi-title-text text-success">Realisasi</div>
+                                        <div class="kpi-amount-text fw-bold text-dark" id="kpi-summary-realisasi">Rp 0</div>
+                                    </div>
+                                    <div class="kpi-icon-box kpi-icon-green shadow-xs">
+                                        <i class="bi bi-pie-chart-fill"></i>
+                                    </div>
+                                </div>
+
+                                <div class="kpi-sub-text text-truncate mb-2" id="kpi-summary-realisasi-pct">0% dari total anggaran</div>
+                                <div class="progress kpi-progress-bar" style="height: 3.5px; background-color: rgba(16,185,129,0.12);">
+                                    <div class="progress-bar progress-bar-gradient-emerald" role="progressbar" style="width: 0%;" id="kpi-summary-realisasi-progress"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Sisa Anggaran -->
+                        <div class="col">
+                            <div class="summary-kpi-card summary-kpi-card-purple h-100">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="flex-grow-1 pe-2" style="min-width: 0;">
+                                        <div class="kpi-title-text text-purple">Sisa Anggaran</div>
+                                        <div class="kpi-amount-text fw-bold text-dark" id="kpi-summary-remaining">Rp 0</div>
+                                    </div>
+                                    <div class="kpi-icon-box kpi-icon-purple shadow-xs">
+                                        <i class="bi bi-wallet-fill"></i>
+                                    </div>
+                                </div>
+
+                                <div class="kpi-sub-text text-truncate mb-2" id="kpi-summary-remaining-pct">0% dari total anggaran</div>
+                                <div class="progress kpi-progress-bar" style="height: 3.5px; background-color: rgba(139,92,246,0.12);">
+                                    <div class="progress-bar progress-bar-gradient-purple" role="progressbar" style="width: 0%;" id="kpi-summary-remaining-progress"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: Pertumbuhan YoY -->
+                        <div class="col">
+                            <div class="summary-kpi-card summary-kpi-card-cyan h-100">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="flex-grow-1 pe-2" style="min-width: 0;">
+                                        <div class="kpi-title-text text-info">Pertumbuhan YoY</div>
+                                        <div class="kpi-amount-text fw-bold text-dark" id="kpi-summary-growth">0.0%</div>
+                                    </div>
+                                    <div class="kpi-icon-box kpi-icon-cyan shadow-xs">
+                                        <i class="bi bi-graph-up-arrow"></i>
+                                    </div>
+                                </div>
+
+                                <div class="kpi-sub-text text-truncate mb-2" id="kpi-summary-growth-sub">vs tahun sebelumnya</div>
+                                <div class="progress kpi-progress-bar" style="height: 3.5px; background-color: rgba(6,182,212,0.12);">
+                                    <div class="progress-bar progress-bar-gradient-cyan" role="progressbar" style="width: 0%;" id="kpi-summary-growth-progress"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 5: Pencapaian (Menggantikan Program) -->
+                        <div class="col">
+                            <div class="summary-kpi-card summary-kpi-card-blue h-100">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="flex-grow-1 pe-2" style="min-width: 0;">
+                                        <div class="kpi-title-text text-primary">Pencapaian</div>
+                                        <div class="kpi-amount-text fw-bold text-dark" id="kpi-summary-pencapaian">0.0%</div>
+                                    </div>
+                                    <div class="kpi-icon-box kpi-icon-blue shadow-xs">
+                                        <i class="bi bi-award-fill"></i>
+                                    </div>
+                                </div>
+
+                                <div class="kpi-sub-text text-truncate mb-2" id="kpi-summary-pencapaian-sub">Realisasi vs target</div>
+                                <div class="progress kpi-progress-bar" style="height: 3.5px; background-color: rgba(37,99,235,0.12);">
+                                    <div class="progress-bar progress-bar-gradient-blue" role="progressbar" style="width: 0%;" id="kpi-summary-pencapaian-progress"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top 5 Kinerja Hierarchy Cards Grid (Matching Sidebar Realisasi Card Design & Scaled for 5 Items) -->
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-2.5 mb-3 d-none" id="kinerja-global-stepper">
+                        <!-- Card 1: Tujuan -->
+                        <div class="col">
+                            <div class="summary-kpi-card summary-kpi-card-blue kinerja-step-card active h-100 cursor-pointer" id="step-tujuan" onclick="switchKinerjaLevel('tujuan')">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="flex-grow-1 pe-2" style="min-width: 0;">
+                                        <div class="kpi-title-text text-primary">Tujuan</div>
+                                        <div class="kpi-amount-text fw-bold text-dark" id="step-sub-tujuan">8 Indikator</div>
+                                    </div>
+                                    <div class="kpi-icon-box kpi-icon-blue shadow-xs">
+                                        <i class="bi bi-bullseye"></i>
+                                    </div>
+                                </div>
+
+                                <div class="kpi-sub-text text-truncate mb-2" id="step-sub-tujuan-pct"><span class="fw-bolder text-danger" style="color: #dc2626 !important; font-weight: 800; font-size: 0.825rem;">6 dari 8</span> indikator tercapai</div>
+                                <div class="progress kpi-progress-bar" style="height: 3.5px; background-color: rgba(37,99,235,0.12);">
+                                    <div class="progress-bar progress-bar-gradient-blue" role="progressbar" style="width: 75%;" id="step-tujuan-progress"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Sasaran -->
+                        <div class="col">
+                            <div class="summary-kpi-card summary-kpi-card-green kinerja-step-card h-100 cursor-pointer" id="step-sasaran" onclick="switchKinerjaLevel('sasaran')">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="flex-grow-1 pe-2" style="min-width: 0;">
+                                        <div class="kpi-title-text text-success">Sasaran</div>
+                                        <div class="kpi-amount-text fw-bold text-dark" id="step-sub-sasaran">6 Indikator</div>
+                                    </div>
+                                    <div class="kpi-icon-box kpi-icon-green shadow-xs">
+                                        <i class="bi bi-flag-fill"></i>
+                                    </div>
+                                </div>
+
+                                <div class="kpi-sub-text text-truncate mb-2" id="step-sub-sasaran-pct"><span class="fw-bolder" style="color: #059669; font-weight: 800; font-size: 0.825rem;">1 dari 8</span> indikator tercapai</div>
+                                <div class="progress kpi-progress-bar" style="height: 3.5px; background-color: rgba(16,185,129,0.12);">
+                                    <div class="progress-bar progress-bar-gradient-emerald" role="progressbar" style="width: 100%;" id="step-sasaran-progress"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Program -->
+                        <div class="col">
+                            <div class="summary-kpi-card summary-kpi-card-amber kinerja-step-card h-100 cursor-pointer" id="step-program" onclick="switchKinerjaLevel('program')">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="flex-grow-1 pe-2" style="min-width: 0;">
+                                        <div class="kpi-title-text text-warning-emphasis">Program</div>
+                                        <div class="kpi-amount-text fw-bold text-dark" id="step-sub-program">8 Indikator</div>
+                                    </div>
+                                    <div class="kpi-icon-box kpi-icon-amber shadow-xs">
+                                        <i class="bi bi-gear-fill"></i>
+                                    </div>
+                                </div>
+
+                                <div class="kpi-sub-text text-truncate mb-2">Level Hierarki 3</div>
+                                <div class="progress kpi-progress-bar" style="height: 3.5px; background-color: rgba(245,158,11,0.12);">
+                                    <div class="progress-bar progress-bar-gradient-amber" role="progressbar" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: Kegiatan -->
+                        <div class="col">
+                            <div class="summary-kpi-card summary-kpi-card-cyan kinerja-step-card h-100 cursor-pointer" id="step-kegiatan" onclick="switchKinerjaLevel('kegiatan')">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="flex-grow-1 pe-2" style="min-width: 0;">
+                                        <div class="kpi-title-text text-info">Kegiatan</div>
+                                        <div class="kpi-amount-text fw-bold text-dark" id="step-sub-kegiatan">18 Indikator</div>
+                                    </div>
+                                    <div class="kpi-icon-box kpi-icon-cyan shadow-xs">
+                                        <i class="bi bi-journal-bookmark-fill"></i>
+                                    </div>
+                                </div>
+
+                                <div class="kpi-sub-text text-truncate mb-2">Level Hierarki 4</div>
+                                <div class="progress kpi-progress-bar" style="height: 3.5px; background-color: rgba(6,182,212,0.12);">
+                                    <div class="progress-bar progress-bar-gradient-cyan" role="progressbar" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 5: Subkegiatan -->
+                        <div class="col">
+                            <div class="summary-kpi-card summary-kpi-card-purple kinerja-step-card h-100 cursor-pointer" id="step-subkegiatan" onclick="switchKinerjaLevel('subkegiatan')">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="flex-grow-1 pe-2" style="min-width: 0;">
+                                        <div class="kpi-title-text text-purple">Subkegiatan</div>
+                                        <div class="kpi-amount-text fw-bold text-dark" id="step-sub-subkegiatan">32 Indikator</div>
+                                    </div>
+                                    <div class="kpi-icon-box kpi-icon-purple shadow-xs">
+                                        <i class="bi bi-boxes"></i>
+                                    </div>
+                                </div>
+
+                                <div class="kpi-sub-text text-truncate mb-2">Level Hierarki 5</div>
+                                <div class="progress kpi-progress-bar" style="height: 3.5px; background-color: rgba(139,92,246,0.12);">
+                                    <div class="progress-bar progress-bar-gradient-purple" role="progressbar" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tab Contents -->
+                    <div class="tab-content" id="dashboard-tabContent">
+                        
+                        <!-- TAB 1: RINGKASAN & VISUALISASI -->
+                        <div class="tab-pane fade show active" id="tab-charts" role="tabpanel" aria-labelledby="charts-tab">
+                            
+                            <!-- Middle Section: Realisasi Anggaran (Full Width) -->
+                            <div class="row g-4 mb-4">
+                                <div class="col-12">
+                                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100 d-flex flex-column justify-content-between">
+                                        <div>
+                                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                                                <div>
+                                                    <h3 class="h6 fw-bold text-dark mb-0" id="title-realisasi-trend">Realisasi Pagu Anggaran Tahun 2026</h3>
+                                                </div>
+                                            </div>
+                                            <!-- Centered Legend with Modern Amber, Green & Blue (Anggaran Bar, Realisasi Bar, Capaian Line) -->
+                                            <div class="d-flex align-items-center justify-content-center gap-4 mb-3 text-xs flex-wrap">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <span style="display: inline-block; width: 14px; height: 14px; background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); border-radius: 3px; box-shadow: 0 2px 5px rgba(217, 119, 6, 0.35);"></span>
+                                                    <span class="text-secondary fw-bold">Anggaran</span>
+                                                </div>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <span style="display: inline-block; width: 14px; height: 14px; background: linear-gradient(135deg, #34d399 0%, #059669 100%); border-radius: 3px; box-shadow: 0 2px 5px rgba(5, 150, 105, 0.35);"></span>
+                                                    <span class="text-secondary fw-bold">Realisasi</span>
+                                                </div>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 14px; position: relative;">
+                                                        <span style="position: absolute; width: 100%; height: 3px; background-color: #2563eb; border-radius: 2px;"></span>
+                                                        <span style="position: relative; width: 8px; height: 8px; background-color: #ffffff; border: 2.5px solid #2563eb; border-radius: 50%; z-index: 1; box-shadow: 0 1px 3px rgba(37, 99, 235, 0.4);"></span>
+                                                    </span>
+                                                    <span class="text-secondary fw-bold">Capaian</span>
+                                                </div>
+                                            </div>
+                                            <div class="chart-body" style="height: 310px; position: relative;">
+                                                <canvas id="chart-trend" style="width: 100%; height: 100%; display: block;"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- Realisasi Anggaran per Hirarki (3 Cards: Program, Kegiatan, Subkegiatan) -->
+                            <div class="row g-4 mb-4">
+                                <!-- Card 1: Realisasi per Program -->
+                                <div class="col-12 col-lg-4">
+                                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100 d-flex flex-column justify-content-between">
+                                        <div>
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <h3 class="h6 fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                                                    <i class="bi bi-journal-bookmark text-primary"></i>
+                                                    <span>Top 5 Program</span>
+                                                </h3>
+                                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2.5 py-1 text-xxs fw-semibold">Program</span>
+                                            </div>
+                                            <div id="top-program-list-container" class="top-hierarchy-container">
+                                                <!-- Dynamic Top 5 Program Items -->
+                                            </div>
+                                        </div>
+                                        <div class="text-center pt-3 mt-3 border-top">
+                                            <button type="button" class="btn btn-link text-primary text-xs fw-semibold text-decoration-none p-0 d-inline-flex align-items-center gap-1 btn-goto-realisasi">
+                                                Lihat rincian data <i class="bi bi-chevron-right fs-7"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- Card 2: Realisasi per Kegiatan -->
+                                <div class="col-12 col-lg-4">
+                                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100 d-flex flex-column justify-content-between">
+                                        <div>
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <h3 class="h6 fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                                                    <i class="bi bi-diagram-3 text-warning"></i>
+                                                    <span>Top 5 Kegiatan</span>
+                                                </h3>
+                                                <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2.5 py-1 text-xxs fw-semibold">Kegiatan</span>
+                                            </div>
+                                            <div id="top-kegiatan-list-container" class="top-hierarchy-container">
+                                                <!-- Dynamic Top 5 Kegiatan Items -->
+                                            </div>
+                                        </div>
+                                        <div class="text-center pt-3 mt-3 border-top">
+                                            <button type="button" class="btn btn-link text-primary text-xs fw-semibold text-decoration-none p-0 d-inline-flex align-items-center gap-1 btn-goto-realisasi">
+                                                Lihat rincian data <i class="bi bi-chevron-right fs-7"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- Card 3: Realisasi per Subkegiatan -->
+                                <div class="col-12 col-lg-4">
+                                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100 d-flex flex-column justify-content-between">
+                                        <div>
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <h3 class="h6 fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                                                    <i class="bi bi-list-check text-success"></i>
+                                                    <span>Top 5 Subkegiatan</span>
+                                                </h3>
+                                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2.5 py-1 text-xxs fw-semibold">Subkegiatan</span>
+                                            </div>
+                                            <div id="top-subkegiatan-list-container" class="top-hierarchy-container">
+                                                <!-- Dynamic Top 5 Subkegiatan Items -->
+                                            </div>
+                                        </div>
+                                        <div class="text-center pt-3 mt-3 border-top">
+                                            <button type="button" class="btn btn-link text-primary text-xs fw-semibold text-decoration-none p-0 d-inline-flex align-items-center gap-1 btn-goto-realisasi">
+                                                Lihat rincian data <i class="bi bi-chevron-right fs-7"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- Bottom Section: Donut Chart (Col 6) + Rincian Alokasi Semua Unit Kerja (Col 6) -->
+                            <div class="row g-4 mb-2">
+                                <!-- Left: Donut Chart Realisasi Anggaran per Unit Kerja (Col 6) -->
+                                <div class="col-12 col-xl-6">
+                                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100 d-flex flex-column justify-content-between">
+                                        <div>
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <h3 class="h6 fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                                                    <i class="bi bi-pie-chart-fill text-primary"></i>
+                                                    <span>Realisasi Anggaran per Unit Kerja (Bidang/UPT)</span>
+                                                </h3>
+                                            </div>
+                                            <div class="row align-items-center g-3">
+                                                <div class="col-12 col-sm-6" style="position: relative; height: 260px;">
+                                                    <canvas id="chart-jenis" style="width: 100%; height: 100%; display: block;"></canvas>
+                                                    <div class="donut-center-overlay text-center" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none;">
+                                                        <div class="fw-bold text-dark" style="font-size: 1.05rem; letter-spacing: -0.02em;" id="donut-center-amount">Rp 0</div>
+                                                        <div class="text-xxs text-muted fw-semibold text-uppercase" style="letter-spacing: 0.05em;">Total Realisasi</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-6">
+                                                    <div id="donut-legend-container" class="d-flex flex-column gap-2">
+                                                        <!-- Dynamic Donut Legend -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- Right: Rincian Alokasi Semua Unit Kerja (Col 6) -->
+                                <div class="col-12 col-xl-6">
+                                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100 d-flex flex-column justify-content-between">
+                                        <div>
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <h3 class="h6 fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                                                    <i class="bi bi-bank text-primary"></i>
+                                                    <span>Rincian Alokasi Semua Unit Kerja</span>
+                                                </h3>
+                                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2.5 py-1 text-xxs fw-semibold" id="rincian-unit-kerja-count">0 Unit</span>
+                                            </div>
+                                            <div class="table-responsive" style="max-height: 265px; overflow-y: auto;">
+                                                <table class="table table-sm table-hover align-middle mb-0" style="font-size: 0.75rem;">
+                                                    <thead class="table-light sticky-top" style="z-index: 1;">
+                                                        <tr>
+                                                            <th class="text-secondary text-xxs fw-bold text-uppercase py-2 ps-2" style="width: 40px;">No</th>
+                                                            <th class="text-secondary text-xxs fw-bold text-uppercase py-2">Unit Kerja (Bidang/UPT)</th>
+                                                            <th class="text-secondary text-xxs fw-bold text-uppercase py-2 text-end">Anggaran</th>
+                                                            <th class="text-secondary text-xxs fw-bold text-uppercase py-2 text-end pe-2" style="width: 75px;">Porsi</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="rincian-unit-kerja-table-body">
+                                                        <!-- Dynamic Rows -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        
+                        <!-- TAB 2: IN-DEPTH EXECUTIVE INSIGHTS -->
+                        <div class="tab-pane fade" id="tab-insights" role="tabpanel" aria-labelledby="insights-tab">
+                            <div class="card border-0 shadow-sm rounded-3 p-4 bg-white mb-4">
+                                <h3 class="h6 border-bottom pb-2 mb-3 text-dark fw-bold d-flex align-items-center">
+                                    <i class="bi bi-lightbulb text-warning me-2 fs-5"></i> Analisis Deskriptif & Executive Insight
+                                </h3>
+                                
+                                <div class="row g-3">
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="insight-item border-primary" id="insight-concentration" style="border-left-color: var(--color-primary) !important;">
+                                            <!-- Injected by JS -->
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="insight-item border-success" id="insight-yoy" style="border-left-color: var(--color-success) !important;">
+                                            <!-- Injected by JS -->
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-lg-4">
+                                        <div class="insight-item border-warning" id="insight-efficiency" style="border-left-color: var(--color-warning) !important;">
+                                            <!-- Injected by JS -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                
+                                <div class="mt-4">
+                                    <h4 class="text-sm fw-semibold text-secondary mb-2">Interpretasi & Catatan Kebijakan:</h4>
+                                    <ol class="text-xs text-secondary ps-3" style="line-height: 1.6;">
+                                        <li class="mb-2"><strong>Konsentrasi Program</strong>: Porsi anggaran pembangunan jalan merupakan komponen dominan di seluruh tahun anggaran, menunjukkan prioritas akselerasi infrastruktur daerah.</li>
+                                        <li class="mb-2"><strong>Dinamika P-APBD (Perubahan)</strong>: Proporsi P-APBD yang setara atau melebihi APBD murni mengindikasikan tingginya volume penyesuaian belanja di tengah tahun berjalan, baik akibat evaluasi prioritas maupun transfer kas daerah tambahan.</li>
+                                        <li class="mb-2"><strong>Kegiatan Tanpa Anggaran (Rp 0)</strong>: Sejumlah subkegiatan dalam database dipertahankan dengan nominal Rp 0. Secara birokrasi, ini penting agar nomenklatur program tetap terdaftar dalam SIPD (Sistem Informasi Pemerintahan Daerah) meskipun alokasi fisiknya dipindahkan/ditangguhkan demi optimalisasi anggaran.</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- TAB: ANGGARAN - PAGU -->
+                        <div class="tab-pane fade" id="tab-anggaran-pagu" role="tabpanel" aria-labelledby="anggaran-pagu-tab">
+                            <!-- 1. Grafik Jenis Pagu Anggaran -->
+                                    <div class="row g-4 mb-4">
+                                        <div class="col-12">
+                                            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                                                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                                                    <h3 class="h6 fw-bold text-dark mb-0" id="title-pagu-jenis">Jenis Pagu Anggaran</h3>
+                                                    <div class="d-flex align-items-center justify-content-center gap-3 text-xs flex-wrap" id="legend-pagu-jenis">
+                                                        <!-- Dynamic Legend -->
+                                                    </div>
+                                                </div>
+                                                <div class="chart-body" style="height: 420px; position: relative;">
+                                                    <canvas id="chart-pagu-jenis" style="width: 100%; height: 100%; display: block;"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 2. Daftar Pagu Anggaran (Data Table) -->
+                                    <div class="data-table-card">
+                                        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <h3 class="h6 fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                                                    <i class="bi bi-table text-primary"></i>
+                                                    <span id="title-daftar-pagu-text">Daftar Pagu Anggaran</span>
+                                                </h3>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <label for="table-limit" class="text-xs text-secondary text-nowrap">Tampilkan:</label>
+                                                    <select class="form-select form-select-sm py-1 border-light-subtle shadow-xs" id="table-limit" style="width: auto;">
+                                                        <option value="10">10 Baris</option>
+                                                        <option value="25">25 Baris</option>
+                                                        <option value="50">50 Baris</option>
+                                                        <option value="100">100 Baris</option>
+                                                    </select>
+                                                </div>
+                                                <span class="text-xs text-muted" id="table-summary">Menampilkan 0 data</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="table-responsive">
+                                            <table class="table custom-table table-hover mb-0" id="budget-detail-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col" class="text-center" style="width: 50px;" data-column="no">No</th>
+                                                        <th scope="col" data-column="bidangUpt">Bidang/UPT Pelaksana</th>
+                                                        <th scope="col" data-column="program">Program</th>
+                                                        <th scope="col" data-column="kegiatan">Kegiatan</th>
+                                                        <th scope="col" data-column="subkegiatan">Subkegiatan</th>
+                                                        <th scope="col" class="text-center" style="width: 100px;" data-column="jenisAnggaran">Jenis</th>
+                                                        <th scope="col" class="text-center" style="width: 80px;" data-column="tahun">Tahun</th>
+                                                        <th scope="col" class="text-end" style="width: 150px;" data-column="anggaran">Anggaran</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="table-body">
+                                                    <!-- Dynamically populated -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        
+                                        <!-- Table Pagination -->
+                                        <nav class="d-flex justify-content-center mt-3" aria-label="Navigasi data anggaran">
+                                            <ul class="pagination pagination-sm mb-0 gap-1" id="pagination-container">
+                                                <!-- Dynamically populated -->
+                                            </ul>
+                                        </nav>
+                                    </div>
+                        </div>
+
+                        <!-- TAB: ANGGARAN - REALISASI -->
+                        <div class="tab-pane fade" id="tab-anggaran-realisasi" role="tabpanel" aria-labelledby="anggaran-realisasi-tab">
+                            <!-- Charts Row on Realisasi Tab -->
+                                    <div class="row g-4 mb-4">
+                                        <!-- Left: Realisasi Pagu Anggaran per Tahun -->
+                                        <div class="col-12">
+                                            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                                                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                                                    <h3 class="h6 fw-bold text-dark mb-0" id="title-anggaran-tahun-jenis">Realisasi Pagu Anggaran</h3>
+                                                    <select class="form-select form-select-sm border rounded-3 text-xs fw-medium shadow-xs px-3 py-1.5" id="anggaran-view-mode" style="min-width: 165px; width: auto; padding-right: 2.25rem; background-color: #ffffff; color: #475569; border-color: #cbd5e1;">
+                                                        <option value="tahun" selected>Per Tahun</option>
+                                                        <option value="jenis">Per Jenis Anggaran</option>
+                                                    </select>
+                                                </div>
+                                                <div class="d-flex align-items-center justify-content-center gap-3 mb-3 text-xs flex-wrap" id="legend-anggaran-tahun-jenis">
+                                                    <!-- Dynamic Legend -->
+                                                </div>
+                                                <div class="chart-body" style="height: 420px; position: relative;">
+                                                    <canvas id="chart-anggaran-tahun-jenis" style="width: 100%; height: 100%; display: block;"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Middle: Realisasi Pagu Anggaran per bulan -->
+                                        <div class="col-12">
+                                            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                                                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                                                    <h3 class="h6 fw-bold text-dark mb-0" id="title-anggaran-bulan">Realisasi Pagu Anggaran per bulan</h3>
+                                                    <div class="d-flex align-items-center justify-content-center gap-3 text-xs flex-wrap" id="legend-anggaran-bulan">
+                                                        <div class="d-flex align-items-center gap-1.5">
+                                                            <span style="display: inline-block; width: 10px; height: 10px; background-color: #fde047; border: 1px solid #eab308; border-radius: 2px;"></span>
+                                                            <span class="text-secondary fw-semibold">Anggaran (APBD)</span>
+                                                        </div>
+                                                        <div class="d-flex align-items-center gap-1.5">
+                                                            <span style="display: inline-block; width: 10px; height: 10px; background-color: #f59e0b; border-radius: 2px;"></span>
+                                                            <span class="text-secondary fw-semibold">Anggaran (P-APBD)</span>
+                                                        </div>
+                                                        <div class="d-flex align-items-center gap-1.5">
+                                                            <span style="display: inline-block; width: 10px; height: 10px; background-color: #10b981; border-radius: 2px;"></span>
+                                                            <span class="text-secondary fw-semibold">Realisasi</span>
+                                                        </div>
+                                                        <div class="d-flex align-items-center gap-1.5">
+                                                            <span style="display: inline-block; width: 10px; height: 10px; background-color: #2563eb; border-radius: 2px;"></span>
+                                                            <span class="text-secondary fw-semibold">Capaian terhadap P-APBD</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="chart-body" style="height: 420px; position: relative;">
+                                                    <canvas id="chart-anggaran-bulan" style="width: 100%; height: 100%; display: block;"></canvas>
+                                                    <div id="anggaran-bulan-empty-overlay" class="position-absolute top-50 start-50 translate-middle text-center bg-white bg-opacity-95 px-4 py-2.5 rounded-3 shadow-sm border" style="z-index: 5; pointer-events: none;">
+                                                        <span class="text-sm fw-semibold text-secondary"><i class="bi bi-info-circle me-1.5 text-primary"></i> Data belum tersedia</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Right: Realisasi Pagu Anggaran per Bidang / UPT -->
+                                        <div class="col-12">
+                                            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                                                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                                                    <h3 class="h6 fw-bold text-dark mb-0" id="title-anggaran-bidang">Realisasi Pagu Anggaran per Bidang / UPT</h3>
+                                                    <div class="d-flex align-items-center justify-content-center gap-4 text-xs flex-wrap" id="legend-anggaran-bidang">
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <span style="display: inline-block; width: 14px; height: 14px; background: linear-gradient(135deg, #fef08a 0%, #eab308 100%); border-radius: 3px; box-shadow: 0 2px 5px rgba(234, 179, 8, 0.35);"></span>
+                                                            <span class="text-secondary fw-bold">APBD Murni</span>
+                                                        </div>
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <span style="display: inline-block; width: 14px; height: 14px; background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); border-radius: 3px; box-shadow: 0 2px 5px rgba(217, 119, 6, 0.35);"></span>
+                                                            <span class="text-secondary fw-bold">P-APBD</span>
+                                                        </div>
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <span style="display: inline-block; width: 14px; height: 14px; background: linear-gradient(135deg, #34d399 0%, #059669 100%); border-radius: 3px; box-shadow: 0 2px 5px rgba(5, 150, 105, 0.35);"></span>
+                                                            <span class="text-secondary fw-bold">Realisasi</span>
+                                                        </div>
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 14px; position: relative;">
+                                                                <span style="position: absolute; width: 100%; height: 3px; background-color: #2563eb; border-radius: 2px;"></span>
+                                                                <span style="position: relative; width: 8px; height: 8px; background-color: #ffffff; border: 2.5px solid #2563eb; border-radius: 50%; z-index: 1; box-shadow: 0 1px 3px rgba(37, 99, 235, 0.4);"></span>
+                                                            </span>
+                                                            <span class="text-secondary fw-bold">Capaian</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="chart-body" style="height: 520px; position: relative; overflow-x: auto; overflow-y: hidden;">
+                                                    <div style="min-width: 1550px; height: 100%; position: relative;" id="container-anggaran-bidang">
+                                                        <canvas id="chart-anggaran-bidang" style="width: 100%; height: 100%; display: block;"></canvas>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Bottom: Penyerapan per Unit Kerja & per Program -->
+                                    <div class="row g-4 mb-2">
+                                        <!-- Table 1: Realisasi per Bidang/UPT -->
+                                        <div class="col-12 col-xl-6">
+                                            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <h4 class="h6 fw-bold text-dark mb-0"><i class="bi bi-building me-2 text-primary"></i> Penyerapan per Unit Kerja (Bidang/UPT)</h4>
+                                                    <span class="badge bg-light text-secondary text-xxs" id="realisasi-count-bidang">0 Unit</span>
+                                                </div>
+                                                <div class="table-responsive realisasi-table-wrapper">
+                                                    <table class="table table-hover align-middle mb-0 text-xs realisasi-table">
+                                                        <thead class="table-light sticky-top" style="z-index: 1;">
+                                                            <tr>
+                                                                <th>Unit Kerja / Bidang UPT</th>
+                                                                <th class="text-end">Realisasi / Pagu</th>
+                                                                <th class="text-end pe-2" style="width: 110px;">Penyerapan</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="realisasi-table-bidang">
+                                                            <!-- Dynamic -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Table 2: Realisasi per Program -->
+                                        <div class="col-12 col-xl-6">
+                                            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <h4 class="h6 fw-bold text-dark mb-0"><i class="bi bi-journal-bookmark me-2 text-primary"></i> Penyerapan per Program Kerja</h4>
+                                                    <span class="badge bg-light text-secondary text-xxs" id="realisasi-count-program">0 Program</span>
+                                                </div>
+                                                <div class="table-responsive realisasi-table-wrapper">
+                                                    <table class="table table-hover align-middle mb-0 text-xs realisasi-table">
+                                                        <thead class="table-light sticky-top" style="z-index: 1;">
+                                                            <tr>
+                                                                <th>Program Kerja</th>
+                                                                <th class="text-end">Realisasi / Pagu</th>
+                                                                <th class="text-end pe-2" style="width: 110px;">Penyerapan</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="realisasi-table-program">
+                                                            <!-- Dynamic -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                        </div>
+
+                        <!-- TAB 4: MAPPING & PERFORMANCE -->
+                        <div class="tab-pane fade" id="tab-mapping" role="tabpanel" aria-labelledby="mapping-tab">
+                            <div class="card border-0 shadow-sm rounded-3 p-4 bg-white mb-4">
+                                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center border-bottom pb-3 mb-3 gap-2">
+                                    <div>
+                                        <h3 class="h5 text-dark fw-bold mb-1">Target Kinerja dan Anggaran Subkegiatan</h3>
+                                        <span class="text-muted text-xs" id="mapping-summary">Menampilkan 0 dari 0 subkegiatan</span>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <label for="mapping-limit" class="text-xs text-muted text-nowrap mb-0">Tampilkan:</label>
+                                        <select class="form-select form-select-sm border-light-subtle shadow-xs" id="mapping-limit" style="width: 80px;">
+                                            <option value="10">10</option>
+                                            <option value="20" selected>20</option>
+                                            <option value="50">50</option>
+                                            <option value="all">Semua</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <div class="table-responsive border rounded" style="max-height: 700px; overflow: auto; position: relative; z-index: 1;">
+                                    <table class="table table-bordered align-middle mapping-table mb-0" style="min-width: 2600px; border-collapse: separate; border-spacing: 0;">
+                                        <thead id="mapping-table-header">
+                                            <tr class="align-middle text-center text-xs fw-bold">
+                                                <th scope="col" style="width: 40px; background-color: #f8fafc;">#</th>
+                                                <th scope="col" style="width: 75px; background-color: #f8fafc;">Status</th>
+                                                <th scope="col" style="min-width: 350px; background-color: #f8fafc;" class="text-start">Sub Kegiatan</th>
+                                                <th scope="col" style="width: 155px; background-color: #f97316; color: #ffffff;">Rule</th>
+                                            </tr>
+                                            <tr style="background-color: #f8fafc;">
+                                                <th colspan="2"></th>
+                                                <th>
+                                                    <input type="text" class="form-control form-control-sm border-light-subtle shadow-xs text-xs" id="mapping-search" placeholder="Cari kode atau nama subkegiatan...">
+                                                </th>
+                                                <th colspan="1"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="mapping-table-body">
+                                            <!-- Dynamically populated -->
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Mapping Pagination -->
+                                <nav class="d-flex justify-content-center mt-3" aria-label="Navigasi pemetaan kinerja">
+                                    <ul class="pagination pagination-sm mb-0 gap-1" id="mapping-pagination-container">
+                                        <!-- Dynamically populated -->
+                                    </ul>
+                                </nav>
+
+                            </div>
+                        </div>
+
+                        <!-- TAB 5A: JALAN DAN JEMBATAN - DATA -->
+                        <div class="tab-pane fade" id="tab-jj-data" role="tabpanel" aria-labelledby="jj-data-tab">
+                            
+                            <!-- Header Card -->
+                            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                                <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+                                    <div>
+                                        <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                                            <h3 class="h5 text-dark fw-bold mb-0">Visualisasi & Analisis Data Jalan dan Jembatan</h3>
+                                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2.5 py-1 rounded-pill fw-semibold text-xs" id="jj-data-total-badge">0 Paket</span>
+                                        </div>
+                                        <p class="text-muted text-xs mb-0">Komparasi alokasi pagu anggaran, realisasi belanja, dan proporsi nilai pekerjaan jalan & jembatan di Jawa Timur.</p>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <button class="btn btn-outline-primary btn-sm rounded-3 px-3 d-flex align-items-center gap-1.5" type="button" onclick="document.getElementById('jj-paket-tab')?.click();">
+                                            <i class="bi bi-table"></i> Buka Tabel Paket
+                                        </button>
+                                        <button class="btn btn-outline-success btn-sm rounded-3 px-3 d-flex align-items-center gap-1.5" type="button" onclick="document.getElementById('jj-peta-tab')?.click();">
+                                            <i class="bi bi-geo-alt"></i> Buka Peta Spasial
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Visual Charts Row -->
+                            <div class="row g-4 mb-4">
+                                <!-- Chart 1: Alokasi per UPT PJJ -->
+                                <div class="col-12 col-lg-7">
+                                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                                        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                                            <div>
+                                                <h4 class="h6 fw-bold text-dark mb-0">Alokasi Pagu & Realisasi Paket per UPT PJJ</h4>
+                                                <span class="text-muted text-xs">Perbandingan alokasi pagu vs serapan per Unit Pelaksana Teknis (UPT PJJ)</span>
+                                            </div>
+                                        </div>
+                                        <div class="chart-body" style="height: 380px; position: relative;">
+                                            <canvas id="chart-paket-upt" style="width: 100%; height: 100%; display: block;"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Chart 2: Komposisi Jenis Pekerjaan -->
+                                <div class="col-12 col-lg-5">
+                                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                                        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                                            <div>
+                                                <h4 class="h6 fw-bold text-dark mb-0">Komposisi Pekerjaan Paket</h4>
+                                                <span class="text-muted text-xs">Proporsi nilai anggaran berdasarkan kelompok pekerjaan</span>
+                                            </div>
+                                        </div>
+                                        <div class="chart-body" style="height: 380px; position: relative;">
+                                            <canvas id="chart-paket-kategori" style="width: 100%; height: 100%; display: block;"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- TAB 5B: JALAN DAN JEMBATAN - PAKET -->
+                        <div class="tab-pane fade" id="tab-jj-paket" role="tabpanel" aria-labelledby="jj-paket-tab">
+                            
+                            <!-- Header & Filter Bar Paket -->
+                            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                                <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+                                    <div>
+                                        <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                                            <h3 class="h5 text-dark fw-bold mb-0">Daftar Paket Pekerjaan Jalan dan Jembatan</h3>
+                                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2.5 py-1 rounded-pill fw-semibold text-xs" id="paket-total-badge">0 Paket</span>
+                                        </div>
+                                        <p class="text-muted text-xs mb-0">Rincian seluruh paket kegiatan dan subkegiatan infrastruktur jalan & jembatan di Jawa Timur.</p>
+                                    </div>
+                                    
+                                    <!-- Quick Subtabs (Semua, Jalan, Jembatan, Pengawasan & Teknis) -->
+                                    <div class="d-flex p-1 bg-light rounded-pill border border-light-subtle gap-1 shadow-2xs flex-wrap" id="paket-category-tabs" role="tablist">
+                                        <button class="btn paket-filter-btn active py-1.5 px-3 rounded-pill fw-semibold text-xs" type="button" data-paket-filter="all">
+                                            <i class="bi bi-grid-fill me-1"></i> Semua
+                                        </button>
+                                        <button class="btn paket-filter-btn py-1.5 px-3 rounded-pill fw-semibold text-xs" type="button" data-paket-filter="jalan">
+                                            <i class="bi bi-signpost-2-fill text-primary me-1"></i> Paket Jalan
+                                        </button>
+                                        <button class="btn paket-filter-btn py-1.5 px-3 rounded-pill fw-semibold text-xs" type="button" data-paket-filter="jembatan">
+                                            <i class="bi bi-water text-success me-1"></i> Paket Jembatan
+                                        </button>
+                                        <button class="btn paket-filter-btn py-1.5 px-3 rounded-pill fw-semibold text-xs" type="button" data-paket-filter="teknis">
+                                            <i class="bi bi-tools text-warning me-1"></i> Perencanaan & Pengawasan
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Interactive Data Table of Paket Pekerjaan -->
+                            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center pb-3 border-bottom mb-3 gap-3">
+                                    <div>
+                                        <h4 class="h6 fw-bold text-dark mb-1">Rincian Paket Pekerjaan</h4>
+                                        <span class="text-muted text-xs" id="paket-table-subtitle">Menampilkan paket pekerjaan berdasarkan filter aktif</span>
+                                    </div>
+                                    
+                                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                                        <!-- Search input inside Paket tab -->
+                                        <div class="input-group input-group-sm" style="width: 250px;">
+                                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                                            <input type="text" class="form-control bg-light border-start-0" id="paket-search-input" placeholder="Cari paket / UPT...">
+                                        </div>
+                                        
+                                        <!-- Export CSV button -->
+                                        <button class="btn btn-outline-secondary btn-sm rounded-3 px-3 d-flex align-items-center gap-1.5" id="btn-export-paket" onclick="exportPaketData()">
+                                            <i class="bi bi-download"></i> Ekspor CSV
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table custom-table table-hover align-middle mb-0 text-xs">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="text-center" style="width: 50px;">No</th>
+                                                <th style="width: 100px;">Kategori</th>
+                                                <th>Nama Paket / Subkegiatan</th>
+                                                <th>Unit Kerja / UPT</th>
+                                                <th class="text-end" style="width: 125px;">Target Fisik</th>
+                                                <th class="text-end" style="width: 140px;">Pagu Anggaran</th>
+                                                <th class="text-end" style="width: 140px;">Realisasi</th>
+                                                <th class="text-center" style="width: 90px;">% Capaian</th>
+                                                <th class="text-center" style="width: 70px;">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="paket-table-tbody">
+                                            <!-- Dynamically populated -->
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Pagination for Paket Table -->
+                                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center pt-3 border-top mt-3 gap-2">
+                                    <span class="text-muted text-xs" id="paket-pagination-info">Menampilkan 0 dari 0 data</span>
+                                    <nav aria-label="Navigasi Halaman Paket">
+                                        <ul class="pagination pagination-sm mb-0 gap-1" id="paket-pagination-container">
+                                            <!-- Dynamic Pagination items -->
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- TAB 5C: JALAN DAN JEMBATAN - PETA -->
+                        <div class="tab-pane fade" id="tab-jj-peta" role="tabpanel" aria-labelledby="jj-peta-tab">
+                            
+                            <!-- Header & Controls Bar Peta -->
+                            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                                <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+                                    <div>
+                                        <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                                            <h3 class="h5 text-dark fw-bold mb-0">Peta Sebaran Paket Jalan & Jembatan</h3>
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle px-2.5 py-1 rounded-pill fw-semibold text-xs" id="peta-upt-total-badge">11 UPT PJJ + Pusat</span>
+                                        </div>
+                                        <p class="text-muted text-xs mb-0">Distribusi lokasi dan pemetaan sebaran paket pekerjaan infrastruktur jalan & jembatan di seluruh wilayah Jawa Timur.</p>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                                        <!-- Dropdown Pilih UPT / Wilayah -->
+                                        <div class="d-flex align-items-center gap-1.5">
+                                            <label for="peta-upt-select" class="text-xs text-muted text-nowrap mb-0"><i class="bi bi-geo-alt text-primary me-1"></i>Fokus UPT:</label>
+                                            <select class="form-select form-select-sm border-light-subtle shadow-xs text-xs" id="peta-upt-select" style="min-width: 180px;">
+                                                <option value="all">Semua Wilayah Jawa Timur</option>
+                                                <!-- Dynamically populated -->
+                                            </select>
+                                        </div>
+
+                                        <!-- Reset Zoom Button -->
+                                        <button class="btn btn-outline-secondary btn-sm rounded-3 px-3 d-flex align-items-center gap-1.5" id="btn-reset-map-view" type="button">
+                                            <i class="bi bi-arrows-fullscreen"></i> Reset Peta
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Map & Sidebar Info Layout -->
+                            <div class="row g-4 mb-4">
+                                <!-- Leaflet GIS Map Container (Col-12 Col-lg-8 Col-xl-8) -->
+                                <div class="col-12 col-lg-8 col-xl-8">
+                                    <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 position-relative">
+                                        <div id="paket-map-container" style="height: 540px; width: 100%; border-radius: 12px; z-index: 1;"></div>
+                                        
+                                        <!-- Floating Legend Overlay on Bottom-Left of Map -->
+                                        <div class="p-2.5 bg-white bg-opacity-95 rounded-3 shadow-sm border border-light-subtle position-absolute" style="bottom: 25px; left: 25px; z-index: 400; font-size: 0.75rem; backdrop-filter: blur(4px); max-width: 240px;">
+                                            <div class="fw-bold text-dark mb-1 d-flex align-items-center gap-1">
+                                                <i class="bi bi-info-circle text-primary"></i> Panduan Interaktif Peta
+                                            </div>
+                                            <div class="d-flex align-items-center gap-2 mb-1">
+                                                <span class="rounded-circle d-inline-block" style="width: 10px; height: 10px; background: linear-gradient(135deg, #1d4ed8, #0ea5e9);"></span>
+                                                <span class="text-xs">UPT PJJ Wilayah</span>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-2 mb-1.5 pb-1 border-bottom">
+                                                <span class="rounded-circle d-inline-block" style="width: 10px; height: 10px; background: linear-gradient(135deg, #b45309, #f59e0b);"></span>
+                                                <span class="text-xs">Kantor Dinas Pusat</span>
+                                            </div>
+                                            <div class="text-muted" style="font-size: 0.68rem; line-height: 1.3;">
+                                                <div class="mb-0.5"><i class="bi bi-mouse text-primary me-1"></i><strong>Hover marker:</strong> Muncul info anggaran</div>
+                                                <div><i class="bi bi-cursor-fill text-success me-1"></i><strong>Klik marker:</strong> Buka rincian detail lengkap</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Side UPT List Card (Col-12 Col-lg-4 Col-xl-4) -->
+                                <div class="col-12 col-lg-4 col-xl-4">
+                                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100 d-flex flex-column">
+                                        <div class="d-flex justify-content-between align-items-center pb-2 border-bottom mb-3">
+                                            <h4 class="h6 fw-bold text-dark mb-0">Daftar Wilayah Kerja UPT</h4>
+                                            <span class="badge bg-light text-muted border text-xxs">Klik untuk sorot</span>
+                                        </div>
+                                        
+                                        <!-- Scrollable list of UPT cards -->
+                                        <div class="overflow-y-auto pe-1 d-flex flex-column gap-2.5 flex-grow-1" id="peta-upt-card-list" style="max-height: 480px;">
+                                            <!-- Dynamically populated UPT summary cards -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- TAB 6: KINERJA (Matching Sidebar Realisasi Design System) -->
+                        <div class="tab-pane fade" id="tab-target-kinerja" role="tabpanel" aria-labelledby="kinerja-tujuan-tab">
+                            <div class="card border-0 shadow-sm rounded-3 p-4 bg-white mb-4">
+                                <div class="border-bottom pb-3 mb-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                    <div>
+                                        <h3 class="h5 text-dark fw-bold mb-1" id="target-header-title">Target & Realisasi Kinerja Tahun 2019 - 2030</h3>
+                                        <span class="text-muted text-xs" id="target-header-subtitle">Menampilkan data target dan capaian realisasi kinerja indikator tujuan</span>
+                                    </div>
+                                </div>
+
+
+                                <!-- Sub-Tabs Khusus Bagian Sasaran (Komposisi Seimbang Penuh: Kiri, Tengah, Kanan) -->
+                                <div class="mb-3 d-none" id="sasaran-subtabs-container">
+                                    <div class="d-flex w-100 p-1.5 bg-light rounded-pill border border-light-subtle gap-1.5 shadow-2xs" id="sasaran-subtabs" role="tablist">
+                                        <button class="btn sasaran-subtab-btn active flex-fill py-2 px-3 rounded-pill fw-semibold d-flex align-items-center justify-content-center gap-2" id="tab-sasaran-all" onclick="switchSasaranTab('all')" type="button">
+                                            <i class="bi bi-grid-fill" style="font-size: 0.95rem;"></i>
+                                            <span>Semua Sasaran</span>
+                                        </button>
+                                        <button class="btn sasaran-subtab-btn flex-fill py-2 px-3 rounded-pill fw-semibold d-flex align-items-center justify-content-center gap-2" id="tab-sasaran-1" onclick="switchSasaranTab('Sasaran 1')" type="button">
+                                            <i class="bi bi-award-fill text-primary" style="font-size: 0.95rem;"></i>
+                                            <span>Sasaran 1</span>
+                                        </button>
+                                        <button class="btn sasaran-subtab-btn flex-fill py-2 px-3 rounded-pill fw-semibold d-flex align-items-center justify-content-center gap-2" id="tab-sasaran-2" onclick="switchSasaranTab('Sasaran 2')" type="button">
+                                            <i class="bi bi-signpost-2-fill text-success" style="font-size: 0.95rem;"></i>
+                                            <span>Sasaran 2</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+
+                                <!-- 2. Level Info Banner -->
+                                <div class="p-3 rounded-3 mb-4 d-flex align-items-center gap-3 bg-light border border-light-subtle" id="tujuan-level-banner">
+                                    <div class="kinerja-hero-icon-box bg-white text-primary rounded-circle d-flex align-items-center justify-content-center shadow-xs flex-shrink-0" id="hero-level-icon-wrap" style="width: 44px; height: 44px; font-size: 1.3rem;">
+                                        <i class="bi bi-bullseye" id="hero-level-icon"></i>
+                                    </div>
+                                    <div>
+                                        <div class="d-flex align-items-center gap-2 mb-0.5">
+                                            <h4 class="h6 fw-bold text-dark mb-0" id="hero-level-title">Tujuan</h4>
+                                        </div>
+                                        <div class="text-muted text-xs" id="hero-level-desc">
+                                            <div class="d-flex flex-column gap-2 mt-1">
+                                                <div class="d-flex align-items-baseline gap-2">
+                                                    <div style="flex: 0 0 145px; width: 145px;">
+                                                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 rounded-pill fw-semibold w-100 text-center" style="font-size: 0.72rem;">Periode 2019 - 2024</span>
+                                                    </div>
+                                                    <div class="text-secondary flex-grow-1" style="font-size: 0.78rem; text-align: justify; line-height: 1.45;">Mewujudkan pelayanan jalan provinsi yang handal dalam rangka mendukung jalur distribusi darat yang prima (aksesibilitas & mobilitas), mendorong dan meningkatkan keseimbangan antar wilayah serta pemerataan pertumbuhan ekonomi di Jawa Timur</div>
+                                                </div>
+                                                <div class="d-flex align-items-baseline gap-2">
+                                                    <div style="flex: 0 0 145px; width: 145px;">
+                                                        <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1 rounded-pill fw-semibold w-100 text-center" style="font-size: 0.72rem;">Periode 2025 (RPD)</span>
+                                                    </div>
+                                                    <div class="text-secondary flex-grow-1" style="font-size: 0.78rem; text-align: justify; line-height: 1.45;">Terwujudnya jalan provinsi yang andal dan berkelanjutan dalam rangka memenuhi kebutuhan aksesibilitas, konektivitas, dan mobilitas jaringan transportasi darat, guna meningkatkan pertumbuhan dan pemerataan ekonomi di Jawa Timur.</div>
+                                                </div>
+                                                <div class="d-flex align-items-baseline gap-2">
+                                                    <div style="flex: 0 0 145px; width: 145px;">
+                                                        <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill fw-semibold w-100 text-center" style="font-size: 0.72rem;">Periode 2025 - 2030</span>
+                                                    </div>
+                                                    <div class="text-secondary flex-grow-1" style="font-size: 0.78rem; text-align: justify; line-height: 1.45;">Terwujudnya Jalan Provinsi yang Berkualitas Dalam Rangka Memperkuat Konektivitas Wilayah</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- Container Standar Kinerja (Tujuan, Sasaran 1, Semua Sasaran, Hierarki Lain) -->
+                                <div id="kinerja-standard-view">
+                                    <!-- 3. 4 KPI Metrics Card (Modern Animated & Colorful Pro Cards) -->
+                                    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-2.5 mb-3" id="kinerja-kpi-cards-row">
+                                    <!-- Card 1: JUMLAH INDIKATOR (Deep Navy Blue) -->
+                                    <div class="col">
+                                        <div class="kinerja-pro-card kinerja-card-navy h-100" id="kinerja-card-1">
+                                            <div class="kinerja-card-content flex-grow-1 d-flex flex-column">
+                                                <div class="kinerja-card-header d-flex justify-content-between align-items-center mb-0">
+                                                    <span class="kinerja-card-title text-uppercase fw-bold" id="metric-title-1">JUMLAH INDIKATOR</span>
+                                                    <div class="kinerja-card-icon-wrap icon-navy" id="metric-icon-wrap-1">
+                                                        <i class="bi bi-layers-half" id="metric-icon-1"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="kinerja-card-body flex-grow-1 d-flex flex-column justify-content-center">
+                                                    <div class="d-flex align-items-baseline gap-2">
+                                                        <h3 class="kinerja-card-value fw-bolder mb-0" id="metric-jumlah-indikator">8</h3>
+                                                        <span class="kinerja-card-unit text-secondary fw-medium" id="metric-subtext-1">indikator</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="kinerja-card-bottom mt-auto">
+                                                <div class="kinerja-mini-progress" id="metric-progress-wrapper-1">
+                                                    <div class="kinerja-mini-progress-bar bar-navy" id="metric-progress-bar-1" style="width: 100%;"></div>
+                                                </div>
+                                                <div class="kinerja-card-footer d-flex align-items-center justify-content-between" id="metric-extra-1">
+                                                    <span class="badge bg-navy-subtle text-navy border border-navy-subtle rounded-pill px-2 py-0.5" style="font-size: 0.68rem;" id="metric-extra-badge-1">
+                                                        <i class="bi bi-check-circle-fill me-1"></i>8 Indikator Aktif
+                                                    </span>
+                                                    <span class="text-muted fw-medium text-end" style="font-size: 0.68rem;" id="metric-extra-note-1">Periode Aktif</span>
+                                                </div>
+                                            </div>
+                                            <div class="d-none" id="metric-bar-1"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Card 2: TARGET INDIKATOR (Cerulean / Sky Blue) -->
+                                    <div class="col">
+                                        <div class="kinerja-pro-card kinerja-card-sky h-100" id="kinerja-card-2">
+                                            <div class="kinerja-card-content flex-grow-1 d-flex flex-column">
+                                                <div class="kinerja-card-header d-flex justify-content-between align-items-center mb-0">
+                                                    <span class="kinerja-card-title text-uppercase fw-bold" id="metric-title-2">RATA-RATA TARGET INDIKATOR</span>
+                                                    <div class="kinerja-card-icon-wrap icon-sky" id="metric-icon-wrap-2">
+                                                        <i class="bi bi-bullseye" id="metric-icon-2"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="kinerja-card-body flex-grow-1 d-flex flex-column justify-content-center">
+                                                    <div class="d-flex align-items-baseline gap-2">
+                                                        <h3 class="kinerja-card-value fw-bolder mb-0" id="metric-rata-target">0,738</h3>
+                                                        <span class="kinerja-card-unit text-secondary fw-medium" id="metric-subtext-2">indeks</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="kinerja-card-bottom mt-auto">
+                                                <div class="kinerja-mini-progress" id="metric-progress-wrapper-2">
+                                                    <div class="kinerja-mini-progress-bar bar-sky" id="metric-progress-bar-2" style="width: 100%;"></div>
+                                                </div>
+                                                <div class="kinerja-card-footer d-flex align-items-center justify-content-between" id="metric-extra-2">
+                                                    <span class="badge bg-sky-subtle text-sky border border-sky-subtle rounded-pill px-2 py-0.5" style="font-size: 0.68rem;" id="metric-extra-badge-2">
+                                                        <i class="bi bi-file-earmark-text me-1"></i>Dokumen Renja
+                                                    </span>
+                                                    <span class="text-muted fw-medium" style="font-size: 0.68rem;" id="metric-extra-note-2">Tahun Anggaran 2019 - 2030</span>
+                                                </div>
+                                            </div>
+                                            <div class="d-none" id="metric-bar-2"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Card 3: REALISASI INDIKATOR (Ocean Cyan / Teal Blue) -->
+                                    <div class="col">
+                                        <div class="kinerja-pro-card kinerja-card-cyan h-100" id="kinerja-card-3">
+                                            <div class="kinerja-card-content flex-grow-1 d-flex flex-column">
+                                                <div class="kinerja-card-header d-flex justify-content-between align-items-center mb-0">
+                                                    <span class="kinerja-card-title text-uppercase fw-bold" id="metric-title-3">RATA-RATA REALISASI INDIKATOR</span>
+                                                    <div class="kinerja-card-icon-wrap icon-cyan" id="metric-icon-wrap-3">
+                                                        <i class="bi bi-award-fill" id="metric-icon-3"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="kinerja-card-body flex-grow-1 d-flex flex-column justify-content-center">
+                                                    <div class="d-flex align-items-baseline gap-2">
+                                                        <h3 class="kinerja-card-value fw-bolder mb-0" id="metric-rata-realisasi">0,780</h3>
+                                                        <span class="kinerja-card-unit text-secondary fw-medium" id="metric-subtext-3">indeks</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="kinerja-card-bottom mt-auto">
+                                                <div class="kinerja-mini-progress" id="metric-progress-wrapper-3">
+                                                    <div class="kinerja-mini-progress-bar bar-cyan" id="metric-progress-bar-3" style="width: 100%;"></div>
+                                                </div>
+                                                <div class="kinerja-card-footer d-flex align-items-center justify-content-between" id="metric-extra-3">
+                                                    <span class="badge bg-cyan-subtle text-cyan border border-cyan-subtle rounded-pill px-2 py-0.5" style="font-size: 0.68rem;" id="metric-extra-badge-3">
+                                                        <i class="bi bi-check2-circle me-1"></i>Capaian Riil
+                                                    </span>
+                                                    <span class="text-muted fw-medium" style="font-size: 0.68rem;" id="metric-extra-note-3">Dokumen LKPJ</span>
+                                                </div>
+                                            </div>
+                                            <div class="d-none" id="metric-bar-3"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Card 4: CAPAIAN INDIKATOR (Vibrant Cobalt / Ultramarine Blue) -->
+                                    <div class="col">
+                                        <div class="kinerja-pro-card kinerja-card-cobalt h-100" id="kinerja-card-4">
+                                            <div class="kinerja-card-content flex-grow-1 d-flex flex-column">
+                                                <div class="kinerja-card-header d-flex justify-content-between align-items-center mb-0">
+                                                    <span class="kinerja-card-title text-uppercase fw-bold" id="metric-title-4">RATA-RATA CAPAIAN INDIKATOR</span>
+                                                    <div class="kinerja-card-icon-wrap icon-cobalt" id="metric-icon-wrap-4">
+                                                        <i class="bi bi-trophy-fill" id="metric-icon-4"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="kinerja-card-body flex-grow-1 d-flex flex-column justify-content-center">
+                                                    <div class="d-flex align-items-baseline gap-2">
+                                                        <h3 class="kinerja-card-value fw-bolder mb-0" id="metric-capaian-kinerja">106,60%</h3>
+                                                        <span class="kinerja-card-unit text-secondary fw-medium d-none" id="metric-subtext-4"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="kinerja-card-bottom mt-auto">
+                                                <div class="kinerja-mini-progress" id="metric-progress-wrapper-4">
+                                                    <div class="kinerja-mini-progress-bar bar-cobalt" id="metric-progress-bar-4" style="width: 100%;"></div>
+                                                </div>
+                                                <div class="kinerja-card-footer d-flex align-items-center justify-content-between" id="metric-extra-4">
+                                                    <span class="badge bg-cobalt-subtle text-cobalt border border-cobalt-subtle rounded-pill px-2 py-0.5" style="font-size: 0.68rem;" id="metric-extra-badge-4">
+                                                        <i class="bi bi-stars me-1"></i>Predikat Tinggi
+                                                    </span>
+                                                    <span class="text-secondary fw-semibold" style="font-size: 0.68rem;" id="metric-extra-note-4">Kategori Sangat Baik</span>
+                                                </div>
+                                            </div>
+                                            <div class="d-none" id="metric-bar-4"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- 4. Visualisasi Grafik (Perbandingan Col 8 & Gauge Col 4) -->
+                                <div class="row g-4 mb-4" id="kinerja-charts-row">
+                                    <!-- Kiri: Perbandingan Target dan Realisasi Indikator (Col 8) -->
+                                    <div class="col-12 col-xl-8">
+                                        <div class="border rounded-3 p-3 bg-white h-100">
+                                            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                                                <h4 class="h6 fw-bold text-dark mb-0">
+                                                    <i class="bi bi-bar-chart-fill me-2 text-warning"></i> <span id="chart-perbandingan-title">Perbandingan Target dan Realisasi Indikator Tujuan</span>
+                                                </h4>
+                                                <!-- Legend with Target, Realisasi & Capaian Line -->
+                                                <div class="d-flex align-items-center gap-3 text-xs">
+                                                    <div class="d-flex align-items-center gap-1.5">
+                                                        <span class="rounded-circle d-inline-block" style="width: 10px; height: 10px; background-color: #f59e0b;"></span>
+                                                        <span class="text-secondary fw-semibold">Target</span>
+                                                    </div>
+                                                    <div class="d-flex align-items-center gap-1.5">
+                                                        <span class="rounded-circle d-inline-block" style="width: 10px; height: 10px; background-color: #10b981;"></span>
+                                                        <span class="text-secondary fw-semibold">Realisasi</span>
+                                                    </div>
+                                                    <div class="d-flex align-items-center gap-1.5">
+                                                        <span class="rounded-circle d-inline-block" style="width: 10px; height: 10px; background-color: #2563eb;"></span>
+                                                        <span class="text-secondary fw-semibold">Capaian (%)</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div style="height: 290px; position: relative;">
+                                                <canvas id="chartPerbandinganTujuan"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Kanan: Capaian Kinerja (Gauge Semi-Donut & Status) (Col 4) -->
+                                    <div class="col-12 col-xl-4">
+                                        <div class="border rounded-3 p-3 bg-white h-100 d-flex flex-column justify-content-between">
+                                            <div>
+                                                <div class="d-flex align-items-center gap-2 mb-3">
+                                                    <h4 class="h6 fw-bold text-dark mb-0">
+                                                        <i class="bi bi-graph-up me-2 text-primary"></i> <span id="chart-capaian-title">Rata-Rata Capaian Kinerja Tujuan</span>
+                                                    </h4>
+                                                </div>
+
+                                                <!-- Single Indicator View (For all years except 2025) -->
+                                                <div id="capaian-single-wrapper">
+                                                    <div class="row align-items-center g-3 my-2 mb-3">
+                                                        <!-- Semi Donut Gauge -->
+                                                        <div class="col-12 col-sm-6 d-flex justify-content-center">
+                                                            <div class="kinerja-gauge-wrapper position-relative" style="width: 175px; height: 110px;">
+                                                                <canvas id="chartGaugeCapaian"></canvas>
+                                                                <div class="kinerja-gauge-center-info">
+                                                                    <div class="kinerja-gauge-pct" id="gauge-center-pct">106,60%</div>
+                                                                    <div class="kinerja-gauge-label" id="gauge-center-status">Sangat Baik</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Status Badge Box -->
+                                                        <div class="col-12 col-sm-6 d-flex align-items-center justify-content-center justify-content-sm-start">
+                                                            <div class="kinerja-status-box p-3 rounded-2 shadow-xs w-100" id="gauge-status-box" style="background-color: #eff6ff; border: 1px solid #bfdbfe; width: 100%;">
+                                                                <div class="d-flex align-items-start" style="gap: 12px;">
+                                                                    <div class="flex-shrink-0 d-flex align-items-center justify-content-center" style="height: 1.25rem;">
+                                                                        <i class="bi bi-check-all text-primary fs-5" id="gauge-status-icon" style="line-height: 1;"></i>
+                                                                    </div>
+                                                                    <div class="d-flex flex-column justify-content-center">
+                                                                        <div class="fw-bold text-primary" style="font-size: 0.825rem; line-height: 1.25rem;" id="gauge-status-title">Melebihi Target</div>
+                                                                        <div class="text-secondary" style="font-size: 0.825rem; line-height: 1.25rem; margin-top: 6px;" id="gauge-status-diff">
+                                                                            dengan selisih <strong class="text-dark fw-bold">+6,60%</strong>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Callout Alert Info -->
+                                                    <div class="d-flex align-items-start p-3 rounded-3" style="background-color: #eff6ff; border: 1px solid #dbeafe; margin-top: 2.25rem; gap: 12px;">
+                                                        <i class="bi bi-info-circle-fill text-primary fs-6 flex-shrink-0" style="margin-top: 1px;"></i>
+                                                        <span class="text-xs text-secondary" id="gauge-alert-text" style="line-height: 1.45;">
+                                                            Capaian kinerja tujuan pada periode 2019 - 2025 berada pada kategori <strong>Sangat Baik</strong> (Rata-rata 106,60%).
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Dual Indicators View (Khusus Tahun 2025: 2 Grafik, 2 Status, 2 Keterangan) -->
+                                                <div id="capaian-dual-2025-wrapper" class="d-none">
+                                                    <div class="d-flex flex-column gap-3.5 my-1">
+                                                        <!-- Indikator 1: 2025 (RPD) -->
+                                                        <div class="p-3 rounded-3 border border-light-subtle bg-white shadow-xs">
+                                                            <div class="d-flex align-items-center mb-2">
+                                                                <span class="badge bg-light text-secondary border border-secondary-subtle px-2.5 py-1 rounded-pill fw-semibold" style="font-size: 0.72rem;">Tahun 2025 (RPD)</span>
+                                                            </div>
+                                                            <div class="row align-items-center g-3">
+                                                                <div class="col-6 d-flex justify-content-center">
+                                                                    <div class="kinerja-gauge-wrapper position-relative" style="width: 140px; height: 85px;">
+                                                                        <canvas id="chartGaugeCapaian2025Rpd"></canvas>
+                                                                        <div class="kinerja-gauge-center-info">
+                                                                            <div class="kinerja-gauge-pct" style="font-size: 1.2rem; font-weight: 800; line-height: 1;">105,20%</div>
+                                                                            <div class="kinerja-gauge-label" style="font-size: 0.72rem; font-weight: 700; color: #2563eb; margin-top: 3px;">Sangat Baik</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-6 d-flex align-items-center justify-content-center justify-content-sm-start">
+                                                                    <div class="kinerja-status-box p-3 rounded-2 shadow-xs w-100" style="background-color: #eff6ff; border: 1px solid #bfdbfe; width: 100%;">
+                                                                        <div class="d-flex align-items-start" style="gap: 12px;">
+                                                                            <div class="flex-shrink-0 d-flex align-items-center justify-content-center" style="height: 1.25rem;">
+                                                                                <i class="bi bi-check-all text-primary fs-5" style="line-height: 1;"></i>
+                                                                            </div>
+                                                                            <div class="d-flex flex-column justify-content-center">
+                                                                                <div class="fw-bold text-primary" style="font-size: 0.78rem; line-height: 1.25rem;">Melebihi Target</div>
+                                                                                <div class="text-secondary" style="font-size: 0.78rem; line-height: 1.25rem; margin-top: 6px;">
+                                                                                    dengan selisih <strong class="text-dark fw-bold">+5,20%</strong>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="d-flex align-items-start p-3 rounded-2" style="background-color: #eff6ff; border: 1px solid #dbeafe; margin-top: 1.75rem; gap: 12px;">
+                                                                <i class="bi bi-info-circle-fill text-primary flex-shrink-0" style="font-size: 0.85rem; margin-top: 1px;"></i>
+                                                                <span style="font-size: 0.72rem; color: #475569; line-height: 1.45;">
+                                                                    Capaian indikator Tahun 2025 (RPD) sebesar <strong>105,20%</strong> berada pada kategori <strong>Sangat Baik</strong>.
+                                                                </span>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Indikator 2: 2025 -->
+                                                        <div class="p-3 rounded-3 border border-light-subtle bg-white shadow-xs">
+                                                            <div class="d-flex align-items-center mb-2">
+                                                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2.5 py-1 rounded-pill fw-semibold" style="font-size: 0.72rem;">Tahun 2025</span>
+                                                            </div>
+                                                            <div class="row align-items-center g-3">
+                                                                <div class="col-6 d-flex justify-content-center">
+                                                                    <div class="kinerja-gauge-wrapper position-relative" style="width: 140px; height: 85px;">
+                                                                        <canvas id="chartGaugeCapaian2025Reg"></canvas>
+                                                                        <div class="kinerja-gauge-center-info">
+                                                                            <div class="kinerja-gauge-pct" style="font-size: 1.2rem; font-weight: 800; line-height: 1;">100,00%</div>
+                                                                            <div class="kinerja-gauge-label" style="font-size: 0.72rem; font-weight: 700; color: #16a34a; margin-top: 3px;">Baik</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-6 d-flex align-items-center justify-content-center justify-content-sm-start">
+                                                                    <div class="kinerja-status-box p-3 rounded-2 shadow-xs w-100" style="background-color: #f0fdf4; border: 1px solid #bbf7d0; width: 100%;">
+                                                                        <div class="d-flex align-items-start" style="gap: 12px;">
+                                                                            <div class="flex-shrink-0 d-flex align-items-center justify-content-center" style="height: 1.25rem;">
+                                                                                <i class="bi bi-check-circle-fill text-success fs-5" style="line-height: 1;"></i>
+                                                                            </div>
+                                                                            <div class="d-flex flex-column justify-content-center">
+                                                                                <div class="fw-bold text-success" style="font-size: 0.78rem; line-height: 1.25rem;">Mencapai Target</div>
+                                                                                <div class="text-secondary" style="font-size: 0.78rem; line-height: 1.25rem; margin-top: 6px;">
+                                                                                    dengan selisih <strong class="text-dark fw-bold">0,00%</strong>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="d-flex align-items-start p-3 rounded-2" style="background-color: #f0fdf4; border: 1px solid #dcfce7; margin-top: 1.75rem; gap: 12px;">
+                                                                <i class="bi bi-info-circle-fill text-success flex-shrink-0" style="font-size: 0.85rem; margin-top: 1px;"></i>
+                                                                <span style="font-size: 0.72rem; color: #475569; line-height: 1.45;">
+                                                                    Capaian indikator Tahun 2025 sebesar <strong>100,00%</strong> berada pada kategori <strong>Baik</strong>.
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- 5. Tabel Daftar Indikator -->
+                                <div class="border rounded-3 p-3 bg-white">
+                                    <div class="border-bottom pb-3 mb-3">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <h4 class="h6 fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                                                <i class="bi bi-list-task text-primary"></i> <span id="table-indikator-card-title">Daftar Indikator Tujuan</span>
+                                            </h4>
+                                        </div>
+                                    </div>
+
+                                    <div class="table-responsive">
+                                        <table class="table custom-table table-hover align-middle mb-0 text-xs" id="table-daftar-indikator">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center" style="width: 50px;">No.</th>
+                                                    <th class="text-center" style="width: 100px;">Tahun</th>
+                                                    <th style="min-width: 260px;" id="th-indikator-name">Indikator Tujuan</th>
+                                                    <th class="text-center" style="width: 90px;">Satuan</th>
+                                                    <th class="text-center" style="width: 110px;" id="th-target-year">Target</th>
+                                                    <th class="text-center" style="width: 110px;" id="th-realisasi-year">Realisasi</th>
+                                                    <th class="text-center" style="width: 110px;">Capaian</th>
+                                                    <th class="text-center" style="width: 140px;">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="kinerja-table-tbody">
+                                                <!-- Dynamic Rows matching Mockup -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3 pt-3 border-top text-xs text-muted">
+                                        <div id="kinerja-table-pagination-info">Menampilkan 1 - 4 dari 4 data</div>
+                                        <nav>
+                                            <ul class="pagination pagination-sm mb-0" id="kinerja-table-pagination">
+                                                <li class="page-item disabled"><a class="page-link" href="javascript:void(0)">&lt;</a></li>
+                                                <li class="page-item active"><a class="page-link" href="javascript:void(0)">1</a></li>
+                                                <li class="page-item disabled"><a class="page-link" href="javascript:void(0)">&gt;</a></li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                                </div>
+                                <!-- Container Khusus Sasaran 2 Multi-Indikator (Disusun Vertikal per Indikator) -->
+                                <div id="sasaran-2-multi-container" class="d-none"></div>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+                
+            </div>
+        </main>
+    </div>
+    <!-- Modal Rincian Anggaran Per Bidang/UPT -->
+    <div class="modal fade" id="bidangDetailsModal" tabindex="-1" aria-labelledby="bidangDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-light border-bottom py-3">
+                    <h5 class="modal-title fw-bold text-dark text-sm" id="bidangDetailsModalLabel">
+                        <i class="bi bi-building me-2 text-primary"></i> Detail Rincian Unit Pelaksana
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4" id="modal-bidang-details-body">
+                    <!-- Dynamic details content -->
+                </div>
+                <div class="modal-footer bg-light border-top py-2">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    </div>
+
+    <!-- Modal Rincian Anggaran Per Program -->
+    <div class="modal fade" id="programDetailsModal" tabindex="-1" aria-labelledby="programDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-light border-bottom py-3">
+                    <h5 class="modal-title fw-bold text-dark text-sm" id="programDetailsModalLabel">
+                        <i class="bi bi-folder2-open me-2 text-primary"></i> Detail Rincian Program Kerja
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4" id="modal-program-details-body">
+                    <!-- Dynamic details content -->
+                </div>
+                <div class="modal-footer bg-light border-top py-2">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    </div>
+
+    <!-- Modal Rincian Anggaran Per Subkegiatan -->
+    <div class="modal fade" id="subkegDetailsModal" tabindex="-1" aria-labelledby="subkegDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-light border-bottom py-3">
+                    <h5 class="modal-title fw-bold text-dark text-sm" id="subkegDetailsModalLabel">
+                        <i class="bi bi-list-stars me-2 text-primary"></i> Detail Rincian Subkegiatan
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4" id="modal-subkeg-details-body">
+                    <!-- Dynamic details content -->
+                </div>
+                <div class="modal-footer bg-light border-top py-2">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    </div>
+
+    <!-- Modal Rincian Anggaran Per Kotak -->
+    <div class="modal fade" id="cellDetailsModal" tabindex="-1" aria-labelledby="cellDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-light border-bottom py-3">
+                    <h5 class="modal-title fw-bold text-dark text-sm" id="cellDetailsModalLabel">
+                        <i class="bi bi-info-circle me-2 text-primary"></i> Detail Rincian Alokasi Belanja
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4" id="modal-details-body">
+                    <!-- Dinonaktifkan sementara dan diisi dinamis -->
+                </div>
+                <div class="modal-footer bg-light border-top py-2">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    </div>
+
+    <!-- Modal Rincian Baris Data Excel -->
+    <div class="modal fade" id="rowDetailsModal" tabindex="-1" aria-labelledby="rowDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-light border-bottom py-3">
+                    <h5 class="modal-title fw-bold text-dark text-sm" id="rowDetailsModalLabel">
+                        <i class="bi bi-file-earmark-spreadsheet me-2 text-primary"></i> Detail Transaksi Anggaran
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4" id="modal-row-details-body">
+                    <!-- Dynamic details content -->
+                </div>
+                <div class="modal-footer bg-light border-top py-2">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    </div>
+
+
+
+        <!-- Modal Detail Keseluruhan UPT / Peta Sebaran Paket Jalan & Jembatan -->
+    <div class="modal fade" id="uptMapDetailModal" tabindex="-1" aria-labelledby="uptMapDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="modal-header text-white py-3 px-4 position-relative" id="modal-upt-header" style="background: linear-gradient(135deg, #1e40af, #3b82f6);">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="rounded-circle bg-white bg-opacity-25 p-2 d-flex align-items-center justify-content-center text-white" style="width: 46px; height: 46px;" id="modal-upt-icon-wrapper">
+                            <i class="bi bi-geo-alt-fill fs-4" id="modal-upt-icon"></i>
+                        </div>
+                        <div>
+                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                <h5 class="modal-title fw-bold mb-0 text-white" id="uptMapDetailModalLabel">UPT PJJ Surabaya</h5>
+                                <span class="badge bg-white text-primary fw-semibold rounded-pill text-xxs" id="modal-upt-tag">Wilayah Kerja</span>
+                            </div>
+                            <p class="mb-0 text-white-50 text-xs mt-0.5" id="modal-upt-subtitle">Surabaya, Sidoarjo, Gresik</p>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 bg-light-subtle" id="modal-upt-detail-body">
+                    <!-- Dynamic details content injected by JavaScript -->
+                </div>
+                <div class="modal-footer bg-white border-top py-2.5 px-4 d-flex justify-content-between align-items-center">
+                    <div class="text-muted text-xs">
+                        <i class="bi bi-info-circle me-1 text-primary"></i> Data terhubung dinamis dengan data anggaran & paket aktif.
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-primary btn-sm px-3 rounded-pill fw-semibold" id="btn-modal-upt-goto-paket">
+                            <i class="bi bi-table me-1.5"></i> Lihat di Tabel Paket
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-sm px-3 rounded-pill" data-bs-dismiss="modal">Tutup</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="py-3 bg-white border-top text-center">
+        <p class="text-muted text-xs mb-0">&copy; 2026 anissadian - sungram. All Right Reserved.</p>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    
+    <!-- Chart.js (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Leaflet JS for Interactive GIS Map -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <!-- Data Source File -->
+    <script src="budget_data.js"></script>
+    
+    <!-- App Logic File -->
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,3321 @@
+/* Google Fonts - Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+    --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --bg-main: #f8fafc;
+    --bg-card: #ffffff;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    
+    /* Elegant harmonious colors */
+    --color-primary: #2563eb;      /* Vibrant Blue */
+    --color-primary-rgb: 37, 99, 235;
+    --color-success: #10b981;      /* Emerald */
+    --color-success-rgb: 16, 185, 129;
+    --color-warning: #f59e0b;      /* Amber */
+    --color-warning-rgb: 245, 158, 11;
+    --color-info: #06b6d4;         /* Cyan */
+    --color-info-rgb: 6, 182, 212;
+    --color-danger: #ef4444;       /* Red */
+    --color-purple: #8b5cf6;       /* Violet */
+    --color-purple-rgb: 139, 92, 246;
+    
+    --border-color: #f1f5f9;
+    --shadow-soft: 0 1px 3px 0 rgb(0 0 0 / 0.02), 0 1px 2px -1px rgb(0 0 0 / 0.02);
+    --shadow-card: 0 4px 6px -1px rgb(0 0 0 / 0.04), 0 2px 4px -2px rgb(0 0 0 / 0.04);
+    --shadow-hover: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
+}
+
+*, button, input, select, textarea, .form-select, .form-control, table, th, td, h1, h2, h3, h4, h5, h6, span, p, a, div {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+}
+
+/* Custom layout */
+.dashboard-container {
+    padding: 1.5rem;
+    flex: 1;
+}
+
+/* Sidebar filter styling */
+.filter-card {
+    background-color: var(--bg-card);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-soft);
+    padding: 1.25rem;
+}
+
+.filter-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
+/* Stat card styling */
+.stat-card {
+    background-color: var(--bg-card);
+    border-radius: 12px;
+    border: none;
+    box-shadow: var(--shadow-soft);
+    padding: 1.25rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card);
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+}
+
+.stat-card-blue::before { background-color: var(--color-primary); }
+.stat-card-teal::before { background-color: var(--color-success); }
+.stat-card-purple::before { background-color: var(--color-purple); }
+.stat-card-warning::before { background-color: var(--color-warning); }
+.stat-card-info::before { background-color: var(--color-info); }
+
+.stat-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.25rem;
+}
+
+.stat-value {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.stat-icon {
+    position: absolute;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    font-size: 1.75rem;
+    opacity: 0.15;
+    color: var(--text-primary);
+}
+
+/* Chart container styling */
+.chart-card {
+    background-color: var(--bg-card);
+    border-radius: 12px;
+    border: none;
+    box-shadow: var(--shadow-soft);
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    transition: box-shadow 0.2s ease;
+}
+
+.chart-card:hover {
+    box-shadow: var(--shadow-card);
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.chart-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.chart-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.chart-body {
+    position: relative;
+    width: 100%;
+}
+
+/* Badges */
+.badge-custom {
+    padding: 0.35em 0.65em;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border-radius: 50rem;
+    letter-spacing: 0.02em;
+}
+
+.badge-apbd {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: var(--color-primary);
+}
+
+.badge-p-apbd {
+    background-color: rgba(139, 92, 246, 0.1);
+    color: var(--color-purple);
+}
+
+/* Table styles */
+.data-table-card {
+    background-color: var(--bg-card);
+    border-radius: 12px;
+    border: none;
+    box-shadow: var(--shadow-soft);
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.custom-table {
+    font-size: 0.8rem;
+    vertical-align: middle;
+}
+
+.custom-table thead th {
+    background-color: #f8fafc;
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    user-select: none;
+}
+
+.custom-table thead th:hover {
+    background-color: #e2e8f0;
+}
+
+.custom-table tbody td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+.custom-table tbody tr:hover td {
+    background-color: #f8fafc;
+    color: var(--text-primary);
+}
+
+/* Sorting icons */
+.sort-icon::after {
+    content: ' \2195';
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+.sort-asc::after {
+    content: ' \2191';
+    color: var(--color-primary) !important;
+}
+.sort-desc::after {
+    content: ' \2193';
+    color: var(--color-primary) !important;
+}
+
+/* Pagination custom */
+.pagination-sm .page-link {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    color: var(--text-secondary);
+}
+
+.pagination-sm .page-item.active .page-link {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Insights grid */
+.insight-item {
+    padding: 0.75rem;
+    border-radius: 8px;
+    background-color: #f8fafc;
+    margin-bottom: 0.75rem;
+    border-left: 3px solid var(--color-info);
+    font-size: 0.8rem;
+}
+
+.insight-item-title {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.15rem;
+}
+
+.insight-item-desc {
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+/* Zero budget notification badge */
+.zero-badge {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--color-danger);
+    font-size: 0.7rem;
+    font-weight: 500;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+}
+
+/* View mode tabs styling */
+.nav-pills-custom .nav-link {
+    color: var(--text-secondary);
+    background: transparent;
+    font-weight: 500;
+    font-size: 0.8rem;
+    border-radius: 8px;
+    padding: 0.4rem 0.8rem;
+    margin-right: 0.25rem;
+    transition: all 0.2s ease;
+}
+
+.nav-pills-custom .nav-link.active {
+    color: #ffffff;
+    background-color: var(--color-primary);
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
+}
+
+/* Top header styles */
+.header-badge {
+    background-color: rgba(59, 130, 246, 0.08);
+    color: var(--color-primary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 0.25rem 0.75rem;
+    border: 1px dashed rgba(59, 130, 246, 0.3);
+}
+
+/* Reset button styling */
+.btn-reset {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+}
+
+.btn-export {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+}
+
+/* Tooltip custom style for table cells */
+.text-truncate-hover {
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+
+.text-truncate-hover:hover {
+    white-space: normal;
+    word-break: break-word;
+    max-width: none;
+    position: relative;
+    z-index: 10;
+    background: var(--bg-card);
+    box-shadow: var(--shadow-soft);
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+/* Sticky footer with upward shadow */
+footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 1020;
+    box-shadow: 0 -4px 10px -1px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Mapping Table & Cards Styles */
+.mapping-table th {
+    font-size: 0.72rem;
+    padding: 0.65rem 0.5rem;
+    vertical-align: middle;
+}
+
+.mapping-table td {
+    font-size: 0.72rem;
+    padding: 0.65rem 0.5rem;
+    vertical-align: middle;
+}
+
+/* Row Hierarchical Grouping Headers */
+.row-dinas-group {
+    background-color: #0f172a !important; /* Dark blue-slate */
+    color: #ffffff !important;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    padding: 0.75rem 1rem !important;
+    text-align: left !important;
+}
+
+.row-program-group {
+    background-color: #e0f2fe !important; /* Soft blue */
+    color: #0369a1 !important;
+    font-weight: 600;
+    font-size: 0.75rem;
+    padding: 0.6rem 1rem !important;
+    text-align: left !important;
+}
+
+.row-kegiatan-group {
+    background-color: #d1fae5 !important; /* Soft green */
+    color: #065f46 !important;
+    font-weight: 600;
+    font-size: 0.73rem;
+    padding: 0.55rem 1rem !important;
+    text-align: left !important;
+}
+
+/* Indicators Inner Card */
+.indicator-card {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.badge-indicator {
+    background-color: #3b82f6;
+    color: #ffffff;
+    font-size: 0.62rem;
+    font-weight: 600;
+    padding: 0.15rem 0.35rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.badge-dssd {
+    background-color: #06b6d4;
+    color: #ffffff;
+    font-size: 0.62rem;
+    font-weight: 600;
+    padding: 0.15rem 0.35rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+/* Budget value columns styling */
+.mapping-budget-val {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+.mapping-budget-lbl {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.mapping-avg-lbl {
+    font-size: 0.62rem;
+    color: #64748b;
+}
+
+.text-xxs {
+    font-size: 0.62rem;
+}
+
+/* Rule Badges */
+.badge-rule-orange {
+    background-color: #fff7ed;
+    color: #ea580c;
+    border: 1px solid #ffedd5;
+    font-size: 0.63rem;
+    font-weight: 500;
+    padding: 0.25rem 0.45rem;
+    border-radius: 6px;
+    display: inline-block;
+    max-width: 140px;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.badge-rule-red {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fee2e2;
+    font-size: 0.63rem;
+    font-weight: 500;
+    padding: 0.25rem 0.45rem;
+    border-radius: 6px;
+    display: inline-block;
+    max-width: 140px;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.badge-rule-blue {
+    background-color: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #dbeafe;
+    font-size: 0.63rem;
+    font-weight: 500;
+    padding: 0.25rem 0.45rem;
+    border-radius: 6px;
+    display: inline-block;
+    max-width: 140px;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.badge-rule-yellow {
+    background-color: #fef9c3;
+    color: #854d0e;
+    border: 1px solid #fef08a;
+    font-size: 0.63rem;
+    font-weight: 500;
+    padding: 0.25rem 0.45rem;
+    border-radius: 6px;
+    display: inline-block;
+    max-width: 140px;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.badge-rule-green {
+    background-color: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #dcfce7;
+    font-size: 0.63rem;
+    font-weight: 500;
+    padding: 0.25rem 0.45rem;
+    border-radius: 6px;
+    display: inline-block;
+    max-width: 140px;
+    white-space: normal;
+    word-break: break-word;
+}
+
+/* Clickable cell box styling */
+.clickable-cell {
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.clickable-cell:hover {
+    background-color: rgba(59, 130, 246, 0.05) !important;
+    outline: 2px solid rgba(59, 130, 246, 0.2) !important;
+    outline-offset: -2px;
+}
+
+/* Floating Filter Button (FAB) styling */
+.floating-filter-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 56px;
+    height: 56px;
+    border: none;
+    border-radius: 50% !important;
+    z-index: 1040; /* Just below Bootstrap Modal (1050) but above everything else */
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3) !important;
+}
+
+.floating-filter-btn:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 12px 30px rgba(59, 130, 246, 0.5) !important;
+}
+
+.floating-filter-btn:active {
+    transform: scale(0.95);
+}
+
+/* Pulsing keyframe for active filter badge */
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    }
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+    }
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
+}
+
+.animate-pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Sticky Stacking layout for Performance Mapping Table */
+.mapping-table thead tr:nth-child(1) th {
+    position: sticky;
+    top: 0;
+    z-index: 1010; /* Higher z-index to stay on top of Row 2 */
+    background-color: #f8fafc;
+    box-shadow: inset 0 -1px 0 #cbd5e1;
+    height: 60px !important;
+    padding: 8px 4px !important;
+    vertical-align: middle;
+}
+
+.mapping-table thead tr:nth-child(2) th {
+    position: sticky;
+    top: 60px; /* Match height of Row 1 */
+    z-index: 1005;
+    background-color: #f8fafc;
+    box-shadow: inset 0 -1px 0 #cbd5e1;
+    height: 44px !important;
+    padding: 4px 8px !important;
+    vertical-align: middle;
+}
+
+.mapping-table tr.row-dinas-group td {
+    position: sticky;
+    top: 104px; /* 60px + 44px */
+    z-index: 1003;
+    background-color: #f1f5f9 !important; /* Slate color */
+    box-shadow: inset 0 -1px 0 #cbd5e1, inset 0 1px 0 #cbd5e1;
+    height: 38px !important;
+    padding: 8px 12px !important;
+    vertical-align: middle;
+}
+
+.mapping-table tr.row-program-group td {
+    position: sticky;
+    top: 142px; /* 104px + 38px */
+    z-index: 1001;
+    background-color: #e0f2fe !important; /* Soft blue */
+    box-shadow: inset 0 -1px 0 #bae6fd, inset 0 1px 0 #bae6fd;
+    height: 38px !important;
+    padding: 8px 20px !important;
+    vertical-align: middle;
+}
+
+.mapping-table tr.row-kegiatan-group td {
+    position: sticky;
+    top: 180px; /* 142px + 38px */
+    z-index: 999;
+    background-color: #d1fae5 !important; /* Soft green */
+    box-shadow: inset 0 -1px 0 #a7f3d0, inset 0 1px 0 #a7f3d0;
+    height: 38px !important;
+    padding: 8px 40px !important;
+    vertical-align: middle;
+}
+
+/* Ensure proper cell borders are preserved with sticky positioning separate mode */
+.mapping-table th, .mapping-table td {
+    border-bottom: 1px solid #e2e8f0 !important;
+    border-right: 1px solid #e2e8f0 !important;
+}
+
+/* Clickable row items in Tabel Data Anggaran */
+.clickable-row-item {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.clickable-row-item:hover {
+    background-color: rgba(59, 130, 246, 0.05) !important;
+}
+
+/* Frozen columns layout (Horizontal Freeze) */
+.col-sticky-1 {
+    position: sticky !important;
+    left: 0;
+    z-index: 12;
+    background-color: #f8fafc;
+    width: 40px !important;
+    min-width: 40px !important;
+    max-width: 40px !important;
+    box-shadow: 1px 0 0 #cbd5e1;
+}
+
+.col-sticky-2 {
+    position: sticky !important;
+    left: 40px;
+    z-index: 12;
+    background-color: #f8fafc;
+    width: 75px !important;
+    min-width: 75px !important;
+    max-width: 75px !important;
+    box-shadow: 1px 0 0 #cbd5e1;
+}
+
+.col-sticky-3 {
+    position: sticky !important;
+    left: 115px; /* 40px + 75px */
+    z-index: 12;
+    background-color: #ffffff;
+    width: 350px !important;
+    min-width: 350px !important;
+    max-width: 350px !important;
+    box-shadow: 2px 0 0 #cbd5e1; /* Stronger border at the end of frozen area */
+}
+
+.col-sticky-span-1-2 {
+    position: sticky !important;
+    left: 0;
+    z-index: 1020 !important;
+    background-color: #f8fafc;
+    width: 115px !important;
+    min-width: 115px !important;
+    max-width: 115px !important;
+    box-shadow: 1px 0 0 #cbd5e1;
+}
+
+/* Zebra striping for sticky column 3 in body */
+.mapping-table tbody tr:not(.row-dinas-group):not(.row-program-group):not(.row-kegiatan-group):nth-child(even) td.col-sticky-3 {
+    background-color: #f8fafc !important;
+}
+.mapping-table tbody tr:not(.row-dinas-group):not(.row-program-group):not(.row-kegiatan-group):nth-child(odd) td.col-sticky-3 {
+    background-color: #ffffff !important;
+}
+
+/* Dinas, Program, Kegiatan Group Headers Sticky */
+.col-sticky-group {
+    position: sticky !important;
+    left: 0;
+    z-index: 1000;
+}
+
+/* Ensure the header frozen cells stay above body frozen cells */
+.mapping-table thead tr th.col-sticky-1,
+.mapping-table thead tr th.col-sticky-2,
+.mapping-table thead tr th.col-sticky-3,
+.mapping-table thead tr th.col-sticky-span-1-2 {
+    z-index: 1030 !important; /* Keep above vertical and horizontal stickies */
+}
+
+/* ==========================================================================
+   Modern Spaced Rows for Realisasi Tables (Unit Kerja & Program Kerja)
+   ========================================================================== */
+.realisasi-table-wrapper {
+    background-color: #f8fafc;
+    border-radius: 12px;
+    padding: 6px 8px;
+    border: 1px solid #e2e8f0;
+    overflow-x: hidden; /* Prevent horizontal scroll, fit cleanly in container */
+}
+
+.realisasi-table {
+    border-collapse: separate !important;
+    border-spacing: 0 6px !important;
+    background-color: transparent !important;
+    margin-bottom: 0 !important;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.realisasi-table thead th {
+    background-color: #f8fafc !important;
+    color: #475569 !important;
+    font-weight: 700 !important;
+    font-size: 0.68rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    padding: 9px 10px !important;
+    border: none !important;
+    border-bottom: 2px solid #cbd5e1 !important;
+    position: sticky !important;
+    top: 0;
+    z-index: 10;
+}
+
+.realisasi-table thead th:nth-child(1) {
+    width: 58%;
+}
+
+.realisasi-table thead th:nth-child(2) {
+    width: 25%;
+}
+
+.realisasi-table thead th:nth-child(3) {
+    width: 17%;
+}
+
+.realisasi-table .table-item-title {
+    white-space: normal !important;
+    word-break: break-word !important;
+    line-height: 1.35 !important;
+    max-width: none !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+}
+
+/* Base Parent Rows (Bidang/UPT and Program Kerja) */
+.realisasi-table tbody tr {
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.03) !important;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 8px;
+}
+
+.realisasi-table tbody tr td {
+    padding: 10px 10px !important;
+    vertical-align: middle !important;
+    border-top: 1px solid #f1f5f9 !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    background-color: #ffffff;
+    font-size: 0.775rem;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+/* Rounded corners on the outer cells */
+.realisasi-table tbody tr td:first-child {
+    border-left: 3.5px solid transparent !important;
+    border-top-left-radius: 8px !important;
+    border-bottom-left-radius: 8px !important;
+}
+
+.realisasi-table tbody tr td:last-child {
+    border-right: 1px solid #e2e8f0 !important;
+    border-top-right-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+}
+
+/* Hover effect: clean elevation and soft tint */
+.realisasi-table tbody tr:hover {
+    box-shadow: 0 6px 14px rgba(16, 185, 129, 0.12), 0 2px 4px rgba(0, 0, 0, 0.04) !important;
+    transform: translateY(-1.5px);
+}
+
+.realisasi-table tbody tr:hover td {
+    background-color: #f0fdf4 !important; /* Soft Emerald highlight */
+    border-top-color: #bbf7d0 !important;
+    border-bottom-color: #86efac !important;
+}
+
+.realisasi-table tbody tr:hover td:first-child {
+    border-left-color: #10b981 !important;
+    border-left-width: 4px !important;
+}
+
+/* Expanded state for parent row */
+.realisasi-table tbody tr.expanded td {
+    background-color: #f8fafc !important;
+    border-bottom-color: #cbd5e1 !important;
+}
+
+.realisasi-table tbody tr.expanded td:first-child {
+    border-left-color: #3b82f6 !important;
+}
+
+/* Child Level 1 (Program under Bidang / Kegiatan under Program) */
+.realisasi-table tbody tr[data-parent-bidang]:not([data-kegiatan-name]),
+.realisasi-table tbody tr[data-parent-program]:not([data-parent-kegiatan]) {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+    transform: none !important;
+}
+
+.realisasi-table tbody tr[data-parent-bidang]:not([data-kegiatan-name]) td,
+.realisasi-table tbody tr[data-parent-program]:not([data-parent-kegiatan]) td {
+    padding: 8px 10px !important;
+    background-color: #f8fafc !important;
+    border-top: 1px dashed #cbd5e1 !important;
+    border-bottom: 1px dashed #cbd5e1 !important;
+    font-size: 0.75rem;
+}
+
+.realisasi-table tbody tr[data-parent-bidang]:not([data-kegiatan-name]) td:first-child,
+.realisasi-table tbody tr[data-parent-program]:not([data-parent-kegiatan]) td:first-child {
+    border-left: 3px solid #64748b !important;
+    border-top-left-radius: 6px !important;
+    border-bottom-left-radius: 6px !important;
+}
+
+.realisasi-table tbody tr[data-parent-bidang]:not([data-kegiatan-name]) td:last-child,
+.realisasi-table tbody tr[data-parent-program]:not([data-parent-kegiatan]) td:last-child {
+    border-right: 1px dashed #cbd5e1 !important;
+    border-top-right-radius: 6px !important;
+    border-bottom-right-radius: 6px !important;
+}
+
+/* Child Level 2 (Kegiatan under Program under Bidang) */
+.realisasi-table tbody tr[data-kegiatan-name] td,
+.realisasi-table tbody tr[data-parent-kegiatan] td {
+    padding: 8px 12px !important;
+    background-color: #f1f5f9 !important;
+    border-top: 1px solid #e2e8f0 !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    font-size: 0.75rem;
+}
+
+.realisasi-table tbody tr[data-kegiatan-name] td:first-child,
+.realisasi-table tbody tr[data-parent-kegiatan] td:first-child {
+    border-left: 3px solid #94a3b8 !important;
+    border-top-left-radius: 6px !important;
+    border-bottom-left-radius: 6px !important;
+}
+
+.realisasi-table tbody tr[data-kegiatan-name] td:last-child,
+.realisasi-table tbody tr[data-parent-kegiatan] td:last-child {
+    border-right: 1px solid #e2e8f0 !important;
+    border-top-right-radius: 6px !important;
+    border-bottom-right-radius: 6px !important;
+}
+
+/* Child Level 3 (Subkegiatan) */
+.realisasi-table tbody tr[data-parent-kegiatan] td {
+    background-color: #ffffff !important;
+    font-size: 0.725rem;
+}
+
+/* Progress bar inside realisasi-table */
+.realisasi-table .progress {
+    height: 7px !important;
+    background-color: #e2e8f0 !important;
+    border-radius: 9999px !important;
+    overflow: hidden;
+}
+
+.realisasi-table .progress-bar {
+    border-radius: 9999px !important;
+    transition: width 0.4s ease;
+}
+
+/* Polished Chevron Controls */
+.realisasi-table .chevron-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    background-color: #f1f5f9;
+    color: #64748b;
+    font-size: 0.65rem !important;
+    flex-shrink: 0;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.15s ease, color 0.15s ease;
+}
+
+.realisasi-table .clickable-row-item:hover .chevron-icon {
+    background-color: #d1fae5;
+    color: #059669;
+}
+
+.realisasi-table .child-chevron-icon,
+.realisasi-table .sub-child-chevron-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    background-color: #e2e8f0;
+    color: #64748b;
+    font-size: 0.6rem !important;
+    flex-shrink: 0;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Clean numeric alignment */
+.realisasi-table td.text-end {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+}
+
+/* Custom Elegant Tooltip Box */
+.custom-elegant-tooltip-box {
+    position: absolute;
+    z-index: 9999;
+    background: #ffffff !important;
+    color: #1e293b;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.08) !important;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+    opacity: 0;
+    display: none;
+    border: 1px solid #cbd5e1 !important;
+    overflow: visible; /* changed from hidden to let the absolute arrow show outside! */
+    min-width: 220px;
+    max-width: 320px;
+}
+
+/* Tooltip Left Pointer Arrow */
+.custom-elegant-tooltip-box::before {
+    content: "";
+    position: absolute;
+    left: -7px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 7px 7px 7px 0;
+    border-style: solid;
+    border-color: transparent #cbd5e1 transparent transparent;
+    z-index: 9998;
+}
+
+.custom-elegant-tooltip-box::after {
+    content: "";
+    position: absolute;
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 6px 6px 6px 0;
+    border-style: solid;
+    border-color: transparent #ffffff transparent transparent;
+    z-index: 9999;
+}
+
+/* Flipped Tooltip Arrow (When positioned on the left side of cursor) */
+.custom-elegant-tooltip-box.tooltip-left::before {
+    left: auto;
+    right: -7px;
+    border-width: 7px 0 7px 7px;
+    border-color: transparent transparent transparent #cbd5e1;
+}
+
+.custom-elegant-tooltip-box.tooltip-left::after {
+    left: auto;
+    right: -6px;
+    border-width: 6px 0 6px 6px;
+    border-color: transparent transparent transparent #ffffff;
+}
+
+/* ==========================================================================
+   Modern App Sidebar Layout (Matching Reference Design)
+   ========================================================================== */
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f8fafc;
+}
+
+.app-sidebar {
+    width: 260px;
+    background-color: #ffffff;
+    border-right: 1px solid #e2e8f0;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1030;
+    padding: 24px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease;
+}
+
+.sidebar-logo-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #2563eb !important;
+    font-size: 1.15rem;
+}
+
+.sidebar-brand-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.2;
+}
+
+.sidebar-brand-sub {
+    font-size: 0.72rem;
+    color: #64748b;
+}
+
+.sidebar-nav-list {
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.sidebar-nav-list .nav-item {
+    margin-bottom: 12px;
+}
+
+.sidebar-menu-btn {
+    width: 100%;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    padding: 11px 16px;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b !important;
+    background: transparent !important;
+    border: none;
+    transition: all 0.15s ease;
+}
+
+.sidebar-menu-btn i {
+    margin-right: 14px;
+    font-size: 1.1rem;
+}
+
+.sidebar-menu-btn:hover:not(.active) {
+    background-color: #f1f5f9 !important;
+    color: #334155 !important;
+}
+
+.sidebar-menu-btn.active {
+    background-color: #eff6ff !important;
+    color: #2563eb !important;
+    font-weight: 600;
+}
+
+.sidebar-user-card {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px 14px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02);
+}
+
+.user-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: #2563eb;
+    font-size: 0.9rem;
+}
+
+.user-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #0f172a;
+    line-height: 1.2;
+}
+
+.user-role {
+    font-size: 0.72rem;
+    color: #64748b;
+}
+
+.app-main {
+    flex: 1;
+    margin-left: 260px;
+    padding: 28px 32px;
+    background-color: #f8fafc;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 991.98px) {
+    .app-sidebar {
+        transform: translateX(-100%);
+    }
+    .app-sidebar.show {
+        transform: translateX(0);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+    }
+    .app-main {
+        margin-left: 0;
+        padding: 20px 16px;
+    }
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.4);
+        backdrop-filter: blur(2px);
+        z-index: 1025;
+    }
+    .sidebar-overlay.show {
+        display: block;
+    }
+}
+
+/* ==========================================================================
+   Ringkasan KPI & Dashboard Cards Styling (Modern, Colorful, Compact & Animated)
+   ========================================================================== */
+.summary-kpi-card {
+    border-radius: 12px;
+    padding: 13px 16px;
+    box-shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.05), 0 1px 3px -1px rgba(0, 0, 0, 0.03);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.summary-kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px -4px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+}
+
+.summary-kpi-card:hover .kpi-icon-box {
+    transform: scale(1.1) rotate(5deg);
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Card 1: Total Anggaran (Blue) */
+.summary-kpi-card-blue {
+    background: linear-gradient(145deg, #ffffff 0%, #eff6ff 45%, #dbeafe 100%);
+    border: 1px solid #bfdbfe;
+    border-top: 3px solid #2563eb;
+}
+.summary-kpi-card-blue:hover {
+    border-color: #93c5fd;
+    border-top-color: #1d4ed8;
+}
+
+/* Card 2: Realisasi (Green) */
+.summary-kpi-card-green {
+    background: linear-gradient(145deg, #ffffff 0%, #f0fdf4 45%, #dcfce7 100%);
+    border: 1px solid #bbf7d0;
+    border-top: 3px solid #10b981;
+}
+.summary-kpi-card-green:hover {
+    border-color: #86efac;
+    border-top-color: #059669;
+}
+
+/* Card 3: Sisa Anggaran (Amber/Yellow) */
+.summary-kpi-card-amber {
+    background: linear-gradient(145deg, #ffffff 0%, #fffbeb 45%, #fef3c7 100%);
+    border: 1px solid #fde68a;
+    border-top: 3px solid #f59e0b;
+}
+.summary-kpi-card-amber:hover {
+    border-color: #fcd34d;
+    border-top-color: #d97706;
+}
+
+/* Card 4: Tingkat Penyerapan (Cyan) */
+.summary-kpi-card-cyan {
+    background: linear-gradient(145deg, #ffffff 0%, #ecfeff 45%, #cffafe 100%);
+    border: 1px solid #a5f3fc;
+    border-top: 3px solid #06b6d4;
+}
+.summary-kpi-card-cyan:hover {
+    border-color: #67e8f9;
+    border-top-color: #0891b2;
+}
+
+/* Card 5: Program (Purple) */
+.summary-kpi-card-purple {
+    background: linear-gradient(145deg, #ffffff 0%, #faf5ff 45%, #f3e8ff 100%);
+    border: 1px solid #e9d5ff;
+    border-top: 3px solid #8b5cf6;
+}
+.summary-kpi-card-purple:hover {
+    border-color: #d8b4fe;
+    border-top-color: #7c3aed;
+}
+
+/* Right Corner Icon Boxes (Vibrant, Glowing, Squircle) */
+.kpi-icon-box {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    flex-shrink: 0;
+}
+
+.kpi-icon-blue {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+}
+
+.kpi-icon-green {
+    background: linear-gradient(135deg, #10b981 0%, #047857 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.35);
+}
+
+.kpi-icon-amber {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.35);
+}
+
+.kpi-icon-cyan {
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 10px rgba(6, 182, 212, 0.35);
+}
+
+.kpi-icon-purple {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 10px rgba(139, 92, 246, 0.35);
+}
+
+.kpi-title-text {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 2px;
+}
+
+.kpi-amount-text {
+    font-size: 1.35rem;
+    font-weight: 800 !important;
+    color: #0f172a;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+}
+
+.kpi-sub-text {
+    font-size: 0.785rem;
+    color: #475569;
+    font-weight: 500;
+    line-height: 1.25;
+}
+
+.kpi-progress-bar {
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 6px;
+}
+
+/* ==========================================================================
+   Target Kinerja Custom Styles (Matching UI Reference Mockup)
+   ========================================================================== */
+
+/* Sub-navigation tabs (Target Kinerja | Target Realisasi Kinerja) */
+.target-subnav-container {
+    display: flex;
+    gap: 8px;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 0;
+}
+
+.target-subnav-btn {
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 8px 18px 12px 18px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #64748b;
+    position: relative;
+    transition: color 0.2s ease;
+    cursor: pointer;
+}
+
+.target-subnav-btn:hover {
+    color: #1e293b;
+}
+
+.target-subnav-btn.active {
+    color: #2563eb !important;
+}
+
+.target-subnav-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2.5px;
+    background-color: #2563eb;
+    border-radius: 4px 4px 0 0;
+}
+
+/* Target KPI Cards */
+.target-kpi-card {
+    position: relative;
+    border: 1px solid #f1f5f9 !important;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.target-kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -2px rgba(0, 0, 0, 0.03) !important;
+}
+
+.target-kpi-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.target-kpi-accent-bar {
+    height: 3.5px;
+    border-radius: 2px;
+    width: 100%;
+    margin-top: auto;
+}
+
+.bg-purple-gradient {
+    background: linear-gradient(90deg, #8b5cf6 0%, #ec4899 100%) !important;
+}
+
+/* Donut Chart Center Text */
+.target-donut-center-info {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    text-align: center;
+}
+
+/* Badges for Balanced Scorecard Perspektif */
+.badge-perspektif-stakeholder {
+    background-color: #e0f2fe !important;
+    color: #0284c7 !important;
+    font-weight: 600 !important;
+    font-size: 0.68rem !important;
+    padding: 4px 10px !important;
+    border-radius: 9999px !important;
+    display: inline-block;
+}
+
+.badge-perspektif-bisnis {
+    background-color: #dcfce7 !important;
+    color: #16a34a !important;
+    font-weight: 600 !important;
+    font-size: 0.68rem !important;
+    padding: 4px 10px !important;
+    border-radius: 9999px !important;
+    display: inline-block;
+}
+
+.badge-perspektif-growth {
+    background-color: #ffedd5 !important;
+    color: #ea580c !important;
+    font-weight: 600 !important;
+    font-size: 0.68rem !important;
+    padding: 4px 10px !important;
+    border-radius: 9999px !important;
+    display: inline-block;
+}
+
+.badge-perspektif-finance {
+    background-color: #f3e8ff !important;
+    color: #9333ea !important;
+    font-weight: 600 !important;
+    font-size: 0.68rem !important;
+    padding: 4px 10px !important;
+    border-radius: 9999px !important;
+    display: inline-block;
+}
+
+/* Table Target Kinerja Stylings */
+.table-target-strategis tbody tr td {
+    padding: 12px 14px !important;
+    vertical-align: middle !important;
+}
+
+.table-target-strategis tbody tr:hover {
+    background-color: #f8fafc !important;
+}
+
+.table-target-subkeg tbody tr td {
+    padding: 9px 12px !important;
+    vertical-align: middle !important;
+}
+
+.table-target-subkeg tbody tr:hover {
+    background-color: #f8fafc !important;
+}
+
+/* ==========================================================================
+   Hierarki Stepper Navigasi Kinerja (Tujuan -> Sasaran -> Program -> Kegiatan -> Subkegiatan)
+   ========================================================================== */
+.kinerja-stepper-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+
+.kinerja-step-item {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    flex: 1;
+    min-width: 150px;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.kinerja-step-item:hover {
+    border-color: #93c5fd;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.kinerja-step-item.active {
+    background-color: #eff6ff !important;
+    border: 1.5px solid #3b82f6 !important;
+    box-shadow: 0 4px 10px -2px rgba(59, 130, 246, 0.15) !important;
+}
+
+.kinerja-step-icon-wrap {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.kinerja-step-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1.25;
+}
+
+.kinerja-step-sub {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+.kinerja-step-item.active .kinerja-step-title {
+    color: #1d4ed8 !important;
+}
+
+.kinerja-step-item.active .kinerja-step-sub {
+    color: #2563eb !important;
+}
+
+.kinerja-step-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    font-size: 0.95rem;
+    opacity: 0.6;
+    flex-shrink: 0;
+}
+
+/* Hero Level Banner */
+.kinerja-hero-banner {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%);
+    border: 1px solid #bfdbfe;
+    border-radius: 16px;
+    padding: 24px 28px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+}
+
+.kinerja-hero-icon-box {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.65rem;
+    color: #2563eb;
+    flex-shrink: 0;
+}
+
+.kinerja-hero-skyline {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 280px;
+    height: 100%;
+    background-image: radial-gradient(circle at 100% 100%, rgba(37, 99, 235, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* Metric Bars */
+.kinerja-metric-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.kinerja-metric-bar {
+    position: absolute;
+    bottom: 0;
+    left: 20px;
+    height: 3.5px;
+    border-radius: 2px 2px 0 0;
+}
+
+/* Target Kinerja KPI Typography (Equal with Sidebar Realisasi Cards) */
+.target-kpi-title {
+    font-size: 0.8125rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    color: #475569 !important;
+}
+
+.target-kpi-amount {
+    font-size: 1.6rem !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.01em !important;
+}
+
+.target-kpi-subtext {
+    font-size: 0.775rem !important;
+    color: #64748b !important;
+    font-weight: 500 !important;
+}
+
+/* Gauge Chart styling */
+.kinerja-gauge-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.kinerja-gauge-center-info {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    pointer-events: none;
+}
+
+.kinerja-gauge-pct {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1;
+}
+
+.kinerja-gauge-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #334155;
+    margin-top: 4px;
+}
+
+/* Subtle background teal colors */
+.bg-teal-subtle {
+    background-color: #ccfbf1 !important;
+}
+.text-teal {
+    color: #0d9488 !important;
+}
+
+/* Sidebar Skyline Watermark */
+.sidebar-skyline-bg {
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    opacity: 0.06;
+    background: radial-gradient(ellipse at bottom, #2563eb 0%, transparent 80%);
+    pointer-events: none;
+}
+
+/* 5 Columns Layout for Kinerja Hierarchy Cards on Large Screens */
+@media (min-width: 992px) {
+    .row-cols-lg-5 > * {
+        flex: 0 0 auto;
+        width: 20%;
+    }
+}
+
+/* Kinerja Hierarchy Step Card (Inheriting Summary KPI Card System) */
+.kinerja-step-card {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.kinerja-step-card:hover {
+    transform: translateY(-3px);
+}
+
+/* Active State with Stronger Modern Accent & Outer Glow */
+.kinerja-step-card.active {
+    transform: translateY(-3px);
+}
+
+.kinerja-step-card.active#step-tujuan {
+    border-color: #2563eb !important;
+    border-top: 3px solid #1d4ed8 !important;
+    box-shadow: 0 0 0 2.5px rgba(37, 99, 235, 0.35), 0 10px 22px -4px rgba(37, 99, 235, 0.25) !important;
+}
+
+.kinerja-step-card.active#step-sasaran {
+    border-color: #10b981 !important;
+    border-top: 3px solid #059669 !important;
+    box-shadow: 0 0 0 2.5px rgba(16, 185, 129, 0.35), 0 10px 22px -4px rgba(16, 185, 129, 0.25) !important;
+}
+
+.kinerja-step-card.active#step-program {
+    border-color: #f59e0b !important;
+    border-top: 3px solid #d97706 !important;
+    box-shadow: 0 0 0 2.5px rgba(245, 158, 11, 0.35), 0 10px 22px -4px rgba(245, 158, 11, 0.25) !important;
+}
+
+.kinerja-step-card.active#step-kegiatan {
+    border-color: #06b6d4 !important;
+    border-top: 3px solid #0891b2 !important;
+    box-shadow: 0 0 0 2.5px rgba(6, 182, 212, 0.35), 0 10px 22px -4px rgba(6, 182, 212, 0.25) !important;
+}
+
+.kinerja-step-card.active#step-subkegiatan {
+    border-color: #8b5cf6 !important;
+    border-top: 3px solid #7c3aed !important;
+    box-shadow: 0 0 0 2.5px rgba(139, 92, 246, 0.35), 0 10px 22px -4px rgba(139, 92, 246, 0.25) !important;
+}
+
+/* Modern Compact KPI Cards for Realisasi and Kinerja */
+.modern-kpi-card {
+    padding: 10px 14px !important;
+    border-radius: 10px;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+}
+
+.modern-kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.07);
+}
+
+/* Modern Blue KPI Palette for Kinerja Cards (Pure Blues, No Purple) */
+.modern-kpi-deepblue,
+.modern-kpi-navy {
+    background: linear-gradient(145deg, #ffffff 0%, #f0f7ff 45%, #dbeafe 100%) !important;
+    border: 1px solid #bfdbfe !important;
+    border-top: 3px solid #1e40af !important;
+}
+
+/* ==========================================================================
+   PRO KPI CARDS FOR KINERJA (Modern, Vibrant, Animated & Rich with Details)
+   ========================================================================== */
+.kinerja-pro-card {
+    position: relative;
+    overflow: hidden;
+    padding: 13px 16px !important;
+    border-radius: 14px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 10px -2px rgba(15, 23, 42, 0.04), 0 2px 4px -1px rgba(15, 23, 42, 0.02);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.kinerja-pro-card:hover {
+    transform: translateY(-4px);
+}
+
+/* Subtle Shimmer Sweep Effect on Hover */
+.kinerja-pro-card::after {
+    content: '';
+    position: absolute;
+    top: -60%;
+    left: -70%;
+    width: 45%;
+    height: 220%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0));
+    transform: rotate(25deg);
+    pointer-events: none;
+    transition: left 0.75s ease-in-out;
+}
+
+.kinerja-pro-card:hover::after {
+    left: 135%;
+}
+
+.kinerja-card-title {
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    font-weight: 800 !important;
+}
+
+.kinerja-card-value {
+    font-size: 1.35rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    font-family: 'Poppins', sans-serif;
+}
+
+.kinerja-card-unit {
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+.kinerja-card-icon-wrap {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.kinerja-pro-card:hover .kinerja-card-icon-wrap {
+    transform: scale(1.15) rotate(6deg);
+}
+
+/* Mini Progress / Visual Ratio Bar */
+.kinerja-mini-progress {
+    height: 5px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+}
+
+.kinerja-mini-progress-bar {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s ease;
+}
+
+.kinerja-card-footer {
+    border-top: 1px dashed rgba(0, 0, 0, 0.06);
+}
+
+/* Card 1: Indigo Theme (Jumlah Indikator) */
+.kinerja-card-indigo {
+    background: linear-gradient(145deg, #ffffff 0%, #f5f3ff 45%, #ede9fe 100%) !important;
+    border: 1px solid #ddd6fe !important;
+    border-top: 3.5px solid #6366f1 !important;
+}
+.kinerja-card-indigo:hover {
+    box-shadow: 0 12px 24px -4px rgba(99, 102, 241, 0.22), 0 4px 10px -2px rgba(99, 102, 241, 0.1) !important;
+}
+.kinerja-card-indigo .kinerja-card-title {
+    color: #4338ca !important;
+}
+.kinerja-card-indigo .kinerja-card-value {
+    color: #1e1b4b !important;
+}
+.icon-indigo {
+    background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
+    color: #ffffff !important;
+}
+.bar-indigo {
+    background: linear-gradient(90deg, #818cf8, #6366f1) !important;
+}
+
+/* Card 2: Amber Theme (Target Indikator) */
+.kinerja-card-amber {
+    background: linear-gradient(145deg, #ffffff 0%, #fffbeb 45%, #fef3c7 100%) !important;
+    border: 1px solid #fde68a !important;
+    border-top: 3.5px solid #f59e0b !important;
+}
+.kinerja-card-amber:hover {
+    box-shadow: 0 12px 24px -4px rgba(245, 158, 11, 0.22), 0 4px 10px -2px rgba(245, 158, 11, 0.1) !important;
+}
+.kinerja-card-amber .kinerja-card-title {
+    color: #b45309 !important;
+}
+.kinerja-card-amber .kinerja-card-value {
+    color: #78350f !important;
+}
+.icon-amber {
+    background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+    color: #ffffff !important;
+}
+.bar-amber {
+    background: linear-gradient(90deg, #fbbf24, #f59e0b) !important;
+}
+
+/* Card 3: Emerald Theme (Realisasi Indikator) */
+.kinerja-card-emerald {
+    background: linear-gradient(145deg, #ffffff 0%, #f0fdf4 45%, #dcfce7 100%) !important;
+    border: 1px solid #bbf7d0 !important;
+    border-top: 3.5px solid #10b981 !important;
+}
+.kinerja-card-emerald:hover {
+    box-shadow: 0 12px 24px -4px rgba(16, 185, 129, 0.22), 0 4px 10px -2px rgba(16, 185, 129, 0.1) !important;
+}
+.kinerja-card-emerald .kinerja-card-title {
+    color: #047857 !important;
+}
+.kinerja-card-emerald .kinerja-card-value {
+    color: #064e3b !important;
+}
+.icon-emerald {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    color: #ffffff !important;
+}
+.bar-emerald {
+    background: linear-gradient(90deg, #34d399, #10b981) !important;
+}
+
+/* Card 4: Sapphire Blue Theme (Capaian Sangat Baik / Standar) */
+.kinerja-card-sapphire {
+    background: linear-gradient(145deg, #ffffff 0%, #eff6ff 45%, #dbeafe 100%) !important;
+    border: 1px solid #bfdbfe !important;
+    border-top: 3.5px solid #2563eb !important;
+}
+.kinerja-card-sapphire:hover {
+    box-shadow: 0 12px 24px -4px rgba(37, 99, 235, 0.22), 0 4px 10px -2px rgba(37, 99, 235, 0.1) !important;
+}
+.kinerja-card-sapphire .kinerja-card-title {
+    color: #1d4ed8 !important;
+}
+.kinerja-card-sapphire .kinerja-card-value {
+    color: #1e3a8a !important;
+}
+.icon-sapphire {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+    color: #ffffff !important;
+}
+.bar-sapphire {
+    background: linear-gradient(90deg, #60a5fa, #2563eb) !important;
+}
+
+/* Card 4 Dynamic: Ruby / Crimson (Capaian Kurang) */
+.kinerja-card-ruby {
+    background: linear-gradient(145deg, #ffffff 0%, #fff1f2 45%, #ffe4e6 100%) !important;
+    border: 1px solid #fecdd3 !important;
+    border-top: 3.5px solid #e11d48 !important;
+}
+.kinerja-card-ruby:hover {
+    box-shadow: 0 12px 24px -4px rgba(225, 29, 72, 0.22), 0 4px 10px -2px rgba(225, 29, 72, 0.1) !important;
+}
+.kinerja-card-ruby .kinerja-card-title {
+    color: #be123c !important;
+}
+.kinerja-card-ruby .kinerja-card-value {
+    color: #881337 !important;
+}
+.icon-ruby {
+    background: linear-gradient(135deg, #f43f5e, #e11d48) !important;
+    color: #ffffff !important;
+}
+.bar-ruby {
+    background: linear-gradient(90deg, #fb7185, #e11d48) !important;
+}
+
+/* Subtle Badges Utilities */
+.bg-indigo-subtle {
+    background-color: #e0e7ff !important;
+}
+.text-indigo {
+    color: #4338ca !important;
+}
+.border-indigo-subtle {
+    border-color: #c7d2fe !important;
+}
+
+.bg-sapphire-subtle {
+    background-color: #dbeafe !important;
+}
+.text-sapphire {
+    color: #1d4ed8 !important;
+}
+.border-sapphire-subtle {
+    border-color: #bfdbfe !important;
+}
+
+.bg-amber-subtle {
+    background-color: #fef3c7 !important;
+}
+.text-amber {
+    color: #b45309 !important;
+}
+.border-amber-subtle {
+    border-color: #fde68a !important;
+}
+
+.bg-emerald-subtle {
+    background-color: #d1fae5 !important;
+}
+.text-emerald {
+    color: #047857 !important;
+}
+.border-emerald-subtle {
+    border-color: #a7f3d0 !important;
+}
+
+.text-metallic-blue,
+.text-vivid-blue {
+    color: #1d4ed8 !important;
+    font-weight: 800 !important;
+}
+
+.modern-kpi-sky {
+    background: linear-gradient(145deg, #ffffff 0%, #f0f9ff 45%, #e0f2fe 100%) !important;
+    border: 1px solid #bae6fd !important;
+    border-top: 3px solid #0284c7 !important;
+}
+
+.modern-kpi-cyan {
+    background: linear-gradient(145deg, #ffffff 0%, #ecfeff 45%, #cffafe 100%) !important;
+    border: 1px solid #a5f3fc !important;
+    border-top: 3px solid #0891b2 !important;
+}
+
+.modern-kpi-cobalt {
+    background: linear-gradient(145deg, #ffffff 0%, #eff6ff 45%, #dbeafe 100%) !important;
+    border: 1px solid #bfdbfe !important;
+    border-top: 3px solid #2563eb !important;
+}
+
+.modern-kpi-blue {
+    background: linear-gradient(135deg, #f0f7ff 0%, #e0effe 100%) !important;
+    border: 1px solid #bfdbfe !important;
+}
+
+.modern-kpi-green {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
+    border: 1px solid #bbf7d0 !important;
+}
+
+.modern-kpi-amber {
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%) !important;
+    border: 1px solid #fde68a !important;
+}
+
+.modern-kpi-purple {
+    background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%) !important;
+    border: 1px solid #e9d5ff !important;
+}
+
+.modern-kpi-slate {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+/* Top Hierarchy List Item (Modern, Animated, Colorful) */
+.top-hierarchy-container,
+#top-program-list-container,
+#top-kegiatan-list-container,
+#top-subkegiatan-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.top-hierarchy-item {
+    padding: 12px 6px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #f1f5f9;
+    border-radius: 0;
+    transition: background-color 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.top-hierarchy-item:first-child {
+    padding-top: 4px;
+}
+
+.top-hierarchy-item:last-child {
+    border-bottom: none;
+    padding-bottom: 4px;
+}
+
+.top-hierarchy-item:hover {
+    background-color: #f8fafc;
+    border-radius: 6px;
+    border-bottom-color: #f1f5f9;
+}
+
+.top-hierarchy-rank {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.rank-badge-1 {
+    background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.35);
+}
+
+.rank-badge-2 {
+    background: linear-gradient(135deg, #64748b 0%, #94a3b8 100%);
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(100, 116, 139, 0.35);
+}
+
+.rank-badge-3 {
+    background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(217, 119, 6, 0.35);
+}
+
+.rank-badge-other {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+/* Animated gradient fill for progress bars */
+.progress-bar-gradient-emerald {
+    background: linear-gradient(90deg, #10b981 0%, #34d399 100%) !important;
+}
+
+.progress-bar-gradient-blue {
+    background: linear-gradient(90deg, #2563eb 0%, #60a5fa 100%) !important;
+}
+
+.progress-bar-gradient-amber {
+    background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%) !important;
+}
+
+.progress-bar-gradient-purple {
+    background: linear-gradient(90deg, #8b5cf6 0%, #c084fc 100%) !important;
+}
+
+.progress-bar-gradient-teal {
+    background: linear-gradient(90deg, #0d9488 0%, #2dd4bf 100%) !important;
+}
+
+.progress-bar-gradient-cyan {
+    background: linear-gradient(90deg, #06b6d4 0%, #38bdf8 100%) !important;
+}
+
+/* ==========================================================================
+   Chart Footer Strip (Executive Realisasi vs Target s.d. Tahun)
+   ========================================================================== */
+.summary-footer-strip {
+    background: transparent;
+    border: none;
+    border-top: 1px solid #f1f5f9;
+    border-radius: 0;
+}
+
+.footer-strip-card {
+    padding: 10px 14px;
+    border-radius: 12px;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.footer-strip-card:hover {
+    transform: translateY(-2px);
+}
+
+.footer-strip-green {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-left: 3.5px solid #10b981;
+}
+
+.footer-strip-green:hover {
+    box-shadow: 0 8px 18px -4px rgba(16, 185, 129, 0.2);
+    border-color: #86efac;
+}
+
+.footer-strip-amber {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-left: 3.5px solid #f59e0b;
+}
+
+.footer-strip-amber:hover {
+    box-shadow: 0 8px 18px -4px rgba(245, 158, 11, 0.2);
+    border-color: #fcd34d;
+}
+
+.footer-strip-icon-box {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    transition: transform 0.25s ease;
+}
+
+.footer-strip-card:hover .footer-strip-icon-box {
+    transform: scale(1.1) rotate(4deg);
+}
+
+.footer-icon-green {
+    background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+    color: #ffffff;
+    box-shadow: 0 3px 8px rgba(16, 185, 129, 0.35);
+}
+
+.footer-icon-amber {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: #ffffff;
+    box-shadow: 0 3px 8px rgba(245, 158, 11, 0.35);
+}
+
+.footer-strip-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 2px;
+}
+
+.footer-strip-val {
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+}
+
+.footer-strip-badge-card {
+    padding: 8px 10px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+    transition: all 0.25s ease;
+    min-height: 52px;
+}
+
+.footer-strip-badge-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.45);
+}
+
+.footer-strip-badge-title {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.9;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+
+.footer-strip-badge-val {
+    font-size: 1.05rem;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+/* ==========================================================================
+   Headbar Floating Filter Pills (Compact & Floating)
+   ========================================================================== */
+.headbar-floating-filter-group {
+    background: transparent;
+}
+
+.floating-filter-pill {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 999px;
+    height: 33px;
+    padding: 0 4px 0 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+}
+
+.floating-filter-pill:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.09);
+    transform: translateY(-1px);
+}
+
+.floating-filter-pill:focus-within {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.floating-filter-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    margin-right: 5px;
+}
+
+.floating-filter-select {
+    border: none;
+    background-color: transparent;
+    font-size: 0.73rem;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    color: #334155;
+    padding: 3px 20px 3px 2px;
+    border-radius: 999px;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 4px center;
+    background-size: 9px 9px;
+    line-height: 1.2;
+}
+
+.floating-filter-select:focus {
+    outline: none;
+}
+
+.floating-filter-input {
+    border: none;
+    background-color: transparent;
+    font-size: 0.73rem;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    color: #334155;
+    padding: 3px 6px 3px 2px;
+    border-radius: 999px;
+    outline: none;
+}
+
+.floating-filter-input::placeholder {
+    color: #94a3b8;
+    font-size: 0.7rem;
+}
+
+.floating-filter-btn-reset,
+.floating-filter-btn-export {
+    width: 33px;
+    height: 33px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.floating-filter-btn-reset:hover {
+    background: #fee2e2;
+    border-color: #fca5a5;
+    color: #ef4444;
+    transform: translateY(-1px) rotate(-45deg);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.floating-filter-btn-export:hover {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #3b82f6;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+/* Sub-Tabs Khusus Bagian Sasaran (Semua Sasaran, Sasaran 1, Sasaran 2) */
+.sasaran-subtab-btn {
+    border: 1px solid transparent !important;
+    color: #64748b;
+    background-color: transparent;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.4;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: none;
+    min-height: 42px;
+}
+.sasaran-subtab-btn:hover {
+    color: #1e293b;
+    background-color: rgba(226, 232, 240, 0.65);
+}
+.sasaran-subtab-btn.active {
+    color: #1d4ed8 !important;
+    background-color: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+}
+
+/* ==========================================================================
+   Modern, Colorful & Prominent Sub-Tabs: Pagu Anggaran vs Realisasi
+   ========================================================================== */
+.pagu-realisasi-tab-bar {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.05);
+}
+
+.subtab-anggaran-nav-btn {
+    border: 1.5px solid #e2e8f0 !important;
+    background-color: #f8fafc;
+    color: #475569;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    min-height: 56px;
+    position: relative;
+    overflow: hidden;
+}
+
+.subtab-anggaran-nav-btn:hover {
+    background-color: #ffffff;
+    border-color: #cbd5e1 !important;
+    color: #1e293b;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+.subtab-anggaran-nav-btn .subtab-icon-wrap {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    transition: all 0.25s ease;
+}
+
+/* Tab 1: Pagu Anggaran Inactive & Active */
+#subtab-anggaran-btn .subtab-icon-wrap {
+    background-color: #eff6ff;
+    color: #2563eb;
+}
+
+#subtab-anggaran-btn:hover .subtab-icon-wrap {
+    background-color: #dbeafe;
+}
+
+#subtab-anggaran-btn.active {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    border-color: #1d4ed8 !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 24px -3px rgba(37, 99, 235, 0.45) !important;
+    transform: translateY(-2px);
+}
+
+#subtab-anggaran-btn.active .subtab-icon-wrap {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+}
+
+#subtab-anggaran-btn.active .subtab-subtitle {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Tab 2: Realisasi Inactive & Active */
+#subtab-realisasi-btn .subtab-icon-wrap {
+    background-color: #ecfdf5;
+    color: #059669;
+}
+
+#subtab-realisasi-btn:hover .subtab-icon-wrap {
+    background-color: #d1fae5;
+}
+
+#subtab-realisasi-btn.active {
+    background: linear-gradient(135deg, #10b981 0%, #047857 100%) !important;
+    border-color: #047857 !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 24px -3px rgba(16, 185, 129, 0.45) !important;
+    transform: translateY(-2px);
+}
+
+#subtab-realisasi-btn.active .subtab-icon-wrap {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+}
+
+#subtab-realisasi-btn.active .subtab-subtitle {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.subtab-anggaran-nav-btn .subtab-title {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.subtab-anggaran-nav-btn .subtab-subtitle {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+
+
+/* ==========================================================================
+   Modern Animated & Varied Blue Shades KPI Cards for Kinerja Tab
+   ========================================================================== */
+.kinerja-pro-card {
+    position: relative;
+    border-radius: 11px;
+    padding: 8px 12px 6px 12px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.04), 0 1px 3px -1px rgba(15, 23, 42, 0.02);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.kinerja-card-bottom {
+    margin-top: auto;
+    width: 100%;
+}
+
+.kinerja-pro-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: transparent;
+    transition: height 0.2s ease;
+}
+
+.kinerja-pro-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -120%;
+    width: 50%;
+    height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+    transform: rotate(25deg);
+    transition: left 0.75s ease;
+    pointer-events: none;
+}
+
+.kinerja-pro-card:hover {
+    transform: translateY(-2.5px);
+    box-shadow: 0 6px 16px -3px rgba(15, 23, 42, 0.08), 0 2px 6px -2px rgba(15, 23, 42, 0.04);
+}
+
+.kinerja-pro-card:hover::after {
+    left: 160%;
+}
+
+.kinerja-pro-card:hover::before {
+    height: 3.5px;
+}
+
+/* Card Header (Tight spacing with Value below) */
+.kinerja-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0px !important;
+}
+
+.kinerja-card-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.025em;
+    line-height: 1.15;
+}
+
+/* Card Icon Box with Micro-Interaction */
+.kinerja-card-icon-wrap {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.88rem;
+    flex-shrink: 0;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+}
+
+.kinerja-pro-card:hover .kinerja-card-icon-wrap {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* Card Body & Values (Prominent Font, Minimal Top Gap) */
+.kinerja-card-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.kinerja-card-value {
+    font-size: 1.4rem;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-family: 'Poppins', sans-serif;
+    margin-top: 1px;
+}
+
+.kinerja-card-unit {
+    font-size: 0.7rem;
+    font-weight: 500;
+    line-height: 1.15;
+}
+
+/* Mini Progress Bar with Minimal Gap to Footer */
+.kinerja-mini-progress {
+    height: 3.5px;
+    width: 100%;
+    background-color: rgba(226, 232, 240, 0.85);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+    margin-top: 6px !important;
+    margin-bottom: 5px !important;
+}
+
+.kinerja-mini-progress-bar {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
+}
+
+/* Card Footer Info (Balanced Gap with Progress Bar above) */
+.kinerja-card-footer {
+    border-top: 1px dashed rgba(226, 232, 240, 0.85);
+    margin-top: 3px !important;
+    padding-top: 4px !important;
+    font-size: 0.68rem;
+    line-height: 1.15;
+}
+
+/* ==========================================================================
+   Harmonious & Varied Blue Shades Themes:
+   1. Deep Navy / Marine Blue (Jumlah Indikator)
+   2. Cerulean / Sky Blue (Target Indikator)
+   3. Ocean Cyan / Teal Blue (Realisasi Indikator)
+   4. Vibrant Cobalt / Ultramarine Blue (Capaian Indikator)
+   5. Dynamic fallback themes (Steel Blue, Slate)
+   ========================================================================== */
+
+/* 1. DEEP NAVY / ROYAL BLUE */
+.kinerja-card-navy,
+.kinerja-card-indigo {
+    border-color: rgba(30, 58, 138, 0.22);
+    background: linear-gradient(145deg, #ffffff 35%, #eff6ff 100%);
+}
+.kinerja-card-navy::before,
+.kinerja-card-indigo::before {
+    background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+}
+.kinerja-card-navy .kinerja-card-title,
+.kinerja-card-indigo .kinerja-card-title {
+    color: #1e40af;
+}
+.kinerja-card-navy .kinerja-card-value,
+.kinerja-card-indigo .kinerja-card-value {
+    color: #0f172a;
+}
+.icon-navy,
+.icon-indigo {
+    background: #dbeafe;
+    color: #1e40af;
+    box-shadow: 0 2px 6px rgba(30, 58, 138, 0.15);
+}
+.bar-navy,
+.bar-indigo {
+    background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+}
+.bg-navy-subtle,
+.bg-indigo-subtle {
+    background-color: #dbeafe !important;
+}
+.text-navy,
+.text-indigo {
+    color: #1e40af !important;
+}
+.border-navy-subtle,
+.border-indigo-subtle {
+    border-color: #bfdbfe !important;
+}
+
+/* 2. CERULEAN / SKY BLUE */
+.kinerja-card-sky,
+.kinerja-card-amber {
+    border-color: rgba(2, 132, 199, 0.22);
+    background: linear-gradient(145deg, #ffffff 35%, #f0f9ff 100%);
+}
+.kinerja-card-sky::before,
+.kinerja-card-amber::before {
+    background: linear-gradient(90deg, #0284c7, #38bdf8);
+}
+.kinerja-card-sky .kinerja-card-title,
+.kinerja-card-amber .kinerja-card-title {
+    color: #0284c7;
+}
+.kinerja-card-sky .kinerja-card-value,
+.kinerja-card-amber .kinerja-card-value {
+    color: #0369a1;
+}
+.icon-sky,
+.icon-amber {
+    background: #e0f2fe;
+    color: #0284c7;
+    box-shadow: 0 2px 6px rgba(2, 132, 199, 0.15);
+}
+.bar-sky,
+.bar-amber {
+    background: linear-gradient(90deg, #0284c7, #38bdf8);
+}
+.bg-sky-subtle,
+.bg-amber-subtle {
+    background-color: #e0f2fe !important;
+}
+.text-sky,
+.text-amber {
+    color: #0284c7 !important;
+}
+.border-sky-subtle,
+.border-amber-subtle {
+    border-color: #bae6fd !important;
+}
+
+/* 3. OCEAN CYAN / TEAL BLUE */
+.kinerja-card-cyan,
+.kinerja-card-emerald {
+    border-color: rgba(8, 145, 178, 0.22);
+    background: linear-gradient(145deg, #ffffff 35%, #ecfeff 100%);
+}
+.kinerja-card-cyan::before,
+.kinerja-card-emerald::before {
+    background: linear-gradient(90deg, #0891b2, #22d3ee);
+}
+.kinerja-card-cyan .kinerja-card-title,
+.kinerja-card-emerald .kinerja-card-title {
+    color: #0891b2;
+}
+.kinerja-card-cyan .kinerja-card-value,
+.kinerja-card-emerald .kinerja-card-value {
+    color: #155e75;
+}
+.icon-cyan,
+.icon-emerald {
+    background: #cffafe;
+    color: #0891b2;
+    box-shadow: 0 2px 6px rgba(8, 145, 178, 0.15);
+}
+.bar-cyan,
+.bar-emerald {
+    background: linear-gradient(90deg, #0891b2, #06b6d4);
+}
+.bg-cyan-subtle,
+.bg-emerald-subtle {
+    background-color: #cffafe !important;
+}
+.text-cyan,
+.text-emerald {
+    color: #0891b2 !important;
+}
+.border-cyan-subtle,
+.border-emerald-subtle {
+    border-color: #a5f3fc !important;
+}
+
+/* 4. VIBRANT COBALT / SAPPHIRE BLUE */
+.kinerja-card-cobalt,
+.kinerja-card-sapphire {
+    border-color: rgba(37, 99, 235, 0.22);
+    background: linear-gradient(145deg, #ffffff 35%, #eef2ff 100%);
+}
+.kinerja-card-cobalt::before,
+.kinerja-card-sapphire::before {
+    background: linear-gradient(90deg, #2563eb, #6366f1);
+}
+.kinerja-card-cobalt .kinerja-card-title,
+.kinerja-card-sapphire .kinerja-card-title {
+    color: #1d4ed8;
+}
+.kinerja-card-cobalt .kinerja-card-value,
+.kinerja-card-sapphire .kinerja-card-value {
+    color: #1e3a8a;
+}
+.icon-cobalt,
+.icon-sapphire {
+    background: #e0e7ff;
+    color: #2563eb;
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.15);
+}
+.bar-cobalt,
+.bar-sapphire {
+    background: linear-gradient(90deg, #2563eb, #6366f1);
+}
+.bg-cobalt-subtle,
+.bg-sapphire-subtle {
+    background-color: #e0e7ff !important;
+}
+.text-cobalt,
+.text-sapphire {
+    color: #1d4ed8 !important;
+}
+.border-cobalt-subtle,
+.border-sapphire-subtle {
+    border-color: #c7d2fe !important;
+}
+
+/* 5. STEEL SLATE-BLUE (Capaian Di Bawah Target / Alert) */
+.kinerja-card-steel,
+.kinerja-card-ruby {
+    border-color: rgba(225, 29, 72, 0.25);
+    background: linear-gradient(145deg, #ffffff 35%, #fff1f2 100%);
+}
+.kinerja-card-steel::before,
+.kinerja-card-ruby::before {
+    background: linear-gradient(90deg, #e11d48, #fb7185);
+}
+.kinerja-card-steel .kinerja-card-title,
+.kinerja-card-ruby .kinerja-card-title {
+    color: #e11d48;
+}
+.kinerja-card-steel .kinerja-card-value,
+.kinerja-card-ruby .kinerja-card-value {
+    color: #881337;
+}
+.icon-steel,
+.icon-ruby {
+    background: #ffe4e6;
+    color: #e11d48;
+    box-shadow: 0 2px 6px rgba(225, 29, 72, 0.15);
+}
+.bar-steel,
+.bar-ruby {
+    background: linear-gradient(90deg, #e11d48, #fb7185);
+}
+
+/* 6. ICE SLATE (Belum Ada Realisasi / Menunggu) */
+.kinerja-card-slate {
+    border-color: rgba(148, 163, 184, 0.25);
+    background: linear-gradient(145deg, #ffffff 35%, #f8fafc 100%);
+}
+.kinerja-card-slate::before {
+    background: linear-gradient(90deg, #94a3b8, #cbd5e1);
+}
+.kinerja-card-slate .kinerja-card-title {
+    color: #64748b;
+}
+.kinerja-card-slate .kinerja-card-value {
+    color: #334155;
+}
+.icon-slate {
+    background: #f1f5f9;
+    color: #64748b;
+    box-shadow: 0 2px 6px rgba(148, 163, 184, 0.15);
+}
+.bar-slate {
+    background: linear-gradient(90deg, #94a3b8, #cbd5e1);
+}
+
+/* ==========================================================================
+   Paket Jalan dan Jembatan Styling
+   ========================================================================== */
+.paket-filter-btn {
+    border: 1px solid transparent !important;
+    color: #64748b;
+    background-color: transparent;
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1.4;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: none;
+    cursor: pointer;
+}
+.paket-filter-btn:hover {
+    color: #1e293b;
+    background-color: rgba(226, 232, 240, 0.65);
+}
+.paket-filter-btn.active {
+    color: #1d4ed8 !important;
+    background-color: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+}
+.badge-paket-jalan {
+    background-color: #eff6ff !important;
+    color: #2563eb !important;
+    border: 1px solid #bfdbfe !important;
+}
+.badge-paket-jembatan {
+    background-color: #ecfdf5 !important;
+    color: #059669 !important;
+    border: 1px solid #a7f3d0 !important;
+}
+.badge-paket-teknis {
+    background-color: #fffbeb !important;
+    color: #d97706 !important;
+    border: 1px solid #fde68a !important;
+}
+
+/* Sub-Tabs Paket: Data vs Peta */
+.subtab-paket-nav-btn {
+    border: 1.5px solid #e2e8f0 !important;
+    background-color: #f8fafc;
+    color: #475569;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    min-height: 54px;
+    position: relative;
+    overflow: hidden;
+}
+.subtab-paket-nav-btn:hover {
+    background-color: #ffffff;
+    border-color: #cbd5e1 !important;
+    color: #1e293b;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+.subtab-paket-nav-btn .subtab-icon-wrap {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    transition: all 0.25s ease;
+}
+
+/* Tab 1: Data */
+#subtab-paket-data-btn .subtab-icon-wrap {
+    background-color: #eff6ff;
+    color: #2563eb;
+}
+#subtab-paket-data-btn:hover .subtab-icon-wrap {
+    background-color: #dbeafe;
+}
+#subtab-paket-data-btn.active {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    border-color: #1d4ed8 !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 24px -3px rgba(37, 99, 235, 0.45) !important;
+    transform: translateY(-2px);
+}
+#subtab-paket-data-btn.active .subtab-icon-wrap {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+}
+#subtab-paket-data-btn.active .subtab-subtitle {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Tab 2: Peta */
+#subtab-paket-peta-btn .subtab-icon-wrap {
+    background-color: #ecfdf5;
+    color: #059669;
+}
+#subtab-paket-peta-btn:hover .subtab-icon-wrap {
+    background-color: #d1fae5;
+}
+#subtab-paket-peta-btn.active {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    border-color: #047857 !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 24px -3px rgba(16, 185, 129, 0.45) !important;
+    transform: translateY(-2px);
+}
+#subtab-paket-peta-btn.active .subtab-icon-wrap {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+}
+#subtab-paket-peta-btn.active .subtab-subtitle {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.subtab-paket-nav-btn .subtab-title {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+.subtab-paket-nav-btn .subtab-subtitle {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+/* Leaflet GIS Map & UPT Cards Styling */
+#paket-map-container {
+    background: #e2e8f0;
+}
+.leaflet-popup-content-wrapper {
+    border-radius: 14px !important;
+    box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.22) !important;
+    font-family: 'Poppins', sans-serif !important;
+    padding: 2px !important;
+    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+.leaflet-popup-content {
+    margin: 14px 16px !important;
+    line-height: 1.4 !important;
+}
+.leaflet-container {
+    font-family: 'Poppins', sans-serif !important;
+}
+
+.upt-map-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 11px 13px;
+    background: #ffffff;
+    transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+}
+.upt-map-card:hover {
+    border-color: #2563eb;
+    background: #f8faff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(37, 99, 235, 0.12);
+}
+.upt-map-card.active {
+    border-color: #2563eb !important;
+    background: #eff6ff !important;
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.16) !important;
+}
+
+/* ==========================================================================
+   Leaflet Custom Markers (Modern Pulsing Pin & Floating Badges)
+   ========================================================================== */
+.custom-map-marker-container {
+    position: relative;
+    width: 60px;
+    height: 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.custom-map-marker-container:hover {
+    transform: translateY(-6px) scale(1.15);
+    z-index: 9999 !important;
+}
+
+/* Pulsing Radar Aura */
+.marker-pulse-radar {
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: markerPulseWave 2.2s infinite ease-out;
+}
+
+.marker-pulse-radar.upt {
+    background: rgba(37, 99, 235, 0.4);
+    box-shadow: 0 0 16px rgba(37, 99, 235, 0.6);
+}
+
+.marker-pulse-radar.pusat {
+    background: rgba(217, 119, 6, 0.45);
+    box-shadow: 0 0 16px rgba(217, 119, 6, 0.65);
+}
+
+@keyframes markerPulseWave {
+    0% {
+        transform: translateX(-50%) scale(0.6);
+        opacity: 0.9;
+    }
+    60% {
+        opacity: 0.35;
+    }
+    100% {
+        transform: translateX(-50%) scale(2.4);
+        opacity: 0;
+    }
+}
+
+/* Modern Teardrop Pin Body */
+.marker-pin-body {
+    width: 36px;
+    height: 36px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #ffffff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+    position: relative;
+    z-index: 2;
+    transition: all 0.2s ease;
+}
+
+.marker-pin-body.upt {
+    background: linear-gradient(135deg, #1d4ed8 0%, #0284c7 60%, #06b6d4 100%);
+}
+
+.marker-pin-body.pusat {
+    background: linear-gradient(135deg, #b45309 0%, #ea580c 50%, #f59e0b 100%);
+}
+
+.marker-pin-icon {
+    transform: rotate(45deg);
+    color: #ffffff;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
+}
+
+/* Floating Micro Budget Badge above Pin */
+.marker-pill-budget {
+    position: absolute;
+    top: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #0f172a;
+    color: #ffffff;
+    font-size: 0.62rem;
+    font-weight: 700;
+    padding: 1.5px 7px;
+    border-radius: 12px;
+    white-space: nowrap;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    border: 1.5px solid #38bdf8;
+    z-index: 4;
+    letter-spacing: 0.02em;
+    pointer-events: none;
+    transition: all 0.2s ease;
+}
+
+.marker-pill-budget.pusat {
+    border-color: #fbbf24;
+}
+
+.custom-map-marker-container:hover .marker-pill-budget {
+    background: #1e293b;
+    border-color: #ffffff;
+    transform: translateX(-50%) scale(1.08);
+}
+
+/* ==========================================================================
+   Leaflet Custom Hover Tooltip (Dark Glassmorphic UI)
+   ========================================================================== */
+.leaflet-tooltip.upt-custom-tooltip {
+    background: rgba(15, 23, 42, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    border-radius: 14px !important;
+    color: #f8fafc !important;
+    padding: 0 !important;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45) !important;
+    font-family: 'Poppins', sans-serif !important;
+    pointer-events: none !important;
+}
+
+.leaflet-tooltip.upt-custom-tooltip:before {
+    border-top-color: rgba(15, 23, 42, 0.95) !important;
+}
+
+.upt-tooltip-inner {
+    padding: 13px 15px;
+    min-width: 260px;
+    max-width: 290px;
+}
+
+.upt-tooltip-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+}
+
+.upt-tooltip-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.upt-tooltip-wilayah {
+    font-size: 0.68rem;
+    color: #94a3b8;
+    line-height: 1.3;
+}
+
+.upt-tooltip-budget-box {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.28), rgba(14, 165, 233, 0.16));
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    border-radius: 10px;
+    padding: 9px 12px;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.upt-tooltip-budget-box.pusat {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.28), rgba(217, 119, 6, 0.16));
+    border-color: rgba(251, 191, 36, 0.4);
+}
+
+.upt-tooltip-budget-label {
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #93c5fd;
+    margin-bottom: 2px;
+}
+
+.upt-tooltip-budget-box.pusat .upt-tooltip-budget-label {
+    color: #fde047;
+}
+
+.upt-tooltip-budget-value {
+    font-size: 1.08rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+}
+
+.upt-tooltip-stats-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.72rem;
+    margin-bottom: 4px;
+    color: #cbd5e1;
+}
+
+.upt-tooltip-hint {
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.16);
+    font-size: 0.67rem;
+    color: #38bdf8;
+    text-align: center;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+/* ==========================================================================
+   Sub-Sidebar Navigation: Jalan dan Jembatan (Data, Paket, Peta)
+   ========================================================================== */
+.submenu-container {
+    border-left: 2px solid #e2e8f0;
+    margin-left: 18px;
+    padding-left: 10px;
+}
+.sidebar-submenu-btn {
+    width: 100%;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: #64748b;
+    font-weight: 500;
+    font-size: 0.8125rem;
+    border: none;
+    background: transparent;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+}
+.sidebar-submenu-btn:hover:not(.active) {
+    background-color: #f1f5f9 !important;
+    color: #1e293b !important;
+    transform: translateX(2px);
+}
+.sidebar-submenu-btn.active {
+    background-color: #eff6ff !important;
+    color: #2563eb !important;
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(37, 99, 235, 0.08);
+}
+.sidebar-submenu-btn i {
+    font-size: 0.95rem;
+    margin-right: 8px;
+    color: inherit;
+}
+.submenu-arrow {
+    transition: transform 0.25s ease;
+}
+.sidebar-menu-btn:not(.collapsed) .submenu-arrow {
+    transform: rotate(180deg);
+}
+.sidebar-menu-btn.active-parent {
+    background-color: #eff6ff !important;
+    color: #2563eb !important;
+    font-weight: 600;
+}
+
+/* Ensure stacked modals render cleanly */
+#uptMapDetailModal {
+    z-index: 1055 !important;
+}
+#rowDetailsModal {
+    z-index: 1065 !important;
+}
